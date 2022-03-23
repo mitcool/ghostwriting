@@ -1,0 +1,1 @@
+<a href="{{route('verify-account',[$code])}}">Verify Account</a>

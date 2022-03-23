@@ -1,0 +1,19 @@
+body{
+	font-family: 'Roboto', sans-serif !important;
+}
+.header-link{
+	text-transform: uppercase;
+	font-weight: 500;
+}
+.red-button{
+	color:white;
+	background: #F84162;
+	border:none;
+	border-radius:5px;
+	padding:8px 20px;
+}
+#header-logo{
+	font-size: 2rem !important;
+	margin-left:30px;
+	font-weight: 600;
+}
