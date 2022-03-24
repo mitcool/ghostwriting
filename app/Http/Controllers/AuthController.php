@@ -33,8 +33,15 @@ class AuthController extends Controller
    {  
         $data = $request->validated();
         $user = $this->create($data);
+        UserDetail::insert(['user_id'=>$user->id]);
         Mail::to($data['email'])->send(new VerifyAccountMail($user->confirmation_code));
         return redirect()->back()->with('success','Successfully registered');
+    }
+
+    public function logout(){
+
+        Auth::logout();
+        return redirect()->back();
     }
 
     public function create(array $data)
@@ -68,8 +75,7 @@ class AuthController extends Controller
             return redirect()->route('welcome')->with('success','Please confirm your email');
         }
         if(Auth::user()->role == UserRoles::$clientRole){
-            Auth::logout();
-            return redirect()->route('client-offers')->with('success','Please confirm your email');
+            return redirect()->route('client-messages');
         }
     }
 

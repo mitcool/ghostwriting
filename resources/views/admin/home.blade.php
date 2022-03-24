@@ -39,7 +39,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                Menu
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -50,7 +50,7 @@
                 </a>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
+            <hr class="sidebar-divider d-none d-md-block">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('freelancer-list')}}">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -61,10 +61,16 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-          
+             <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-orders')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Orders</span>
+                </a>
+            </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+                    
+
 
 
 

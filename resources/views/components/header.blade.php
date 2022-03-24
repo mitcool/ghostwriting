@@ -23,8 +23,16 @@
         </li>
       </ul>
       <div class="d-flex">
-        <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#login_modal">Sign In</button>
-        <button class="btn theme-background mx-2 text-white" style="border-radius:30px;" data-bs-toggle="modal" data-bs-target="#register_modal">Get Started</button>
+        @guest
+          <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#login_modal">Sign In</button>
+          <button class="btn theme-background mx-2 text-white" style="border-radius:30px;" data-bs-toggle="modal" data-bs-target="#register_modal">Get Started</button>
+        @else
+          <a style="border-radius:30px;" class="btn theme-background mx-2 text-white" href="{{route('dashboard')}}">Dashboard</a>
+          <form action="{{route('logout')}}" method="POST">
+              {{csrf_field()}}
+              <button class="btn">Logout</button>
+          </form>
+        @endguest
 
         @if(Session::get('locale')=='de')
           <a href="{{route('change-language','en')}}" class="btn theme-background mx-2 text-white" style="border-radius:30px;" type="submit">EN</a>

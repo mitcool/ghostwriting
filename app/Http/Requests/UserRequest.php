@@ -20,6 +20,7 @@ class UserRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
+            'g-recaptcha-response' => 'required|recaptcha'
         ];
     }
 }

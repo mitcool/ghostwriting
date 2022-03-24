@@ -53,4 +53,9 @@ class User extends Authenticatable
     public function freelancer_jobs(){
         return $this->hasMany('App\Models\FreelancerJob','user_id','id');
     }
+
+    public function details(){
+
+         return $this->hasOne('App\Models\UserDetail','user_id','id');
+    }
 }

@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use App;
 use Session;
 use Mail;
+use Auth;
 use Hash;
 
 //models
 use App\Models\User;
+use App\Models\UserDetail;
 use App\Models\Service;
 use App\Models\Faq;
 use App\Models\OrderOption;
@@ -222,5 +224,26 @@ class HomeController extends Controller
         $faqs = Faq::all();
         return view('pages.client-learn-more')
             ->with('faqs',$faqs);
+    }
+
+    public function changeDetails(Request $request){
+
+        //TODO::Request validation
+        $user_id = Auth::id();
+
+        UserDetail::where('user_id',$user_id)->update([
+            'phone'  => $request->phone,   
+            'phone_code' => $request->phone_code,
+            'country_id'  => $request->country_id, 
+            'city'     => $request->city,
+            'avatar'  => $request->avatar, 
+            'zip'   => $request->zip,
+            'company' => $request->company, 
+            'vat' => $request->vat,
+            'skype' => $request->skype,
+            'address' =>  $request->address
+         ]);
+
+        return redirect()->back()->with('success','Your details has been changed successfully');
     }
 }

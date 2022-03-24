@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\ClientController;
 
 
 
@@ -82,6 +83,8 @@ Route::post('/register',[AuthController::class,'register'])->name('register');
 
 Route::get('/dashboard',[AuthController::class,'dashboard'])->name('dashboard');
 
+Route::post('/logout',[AuthController::class,'logout'])->name('logout');
+
 // Admin routes
 
 Route::get('/admin',[AdminController::class,'admin'])->name('admin');
@@ -97,6 +100,10 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::post('/freelancer/approve/{freelancer_id}',[AdminController::class,'approveFreelancer'])->name('approve-freelancer');
 
 	Route::post('/freelancer/decline/{freelancer_id}',[AdminController::class,'declineFreelancer'])->name('decline-freelancer');
+
+	Route::get('/orders',[AdminController::class,'orders'])->name('admin-orders');
+
+	Route::post('/offer/send/{order_id}',[AdminController::class,'sendOffer'])->name('send-offer');
 
 });
 

@@ -11,8 +11,10 @@ use App\Models\FreelancerSubject;
 use App\Models\Freelancer;
 use App\Models\FreelancerLanguage;
 use App\Models\FreelancerJob;
+use App\Models\Order;
 
 use App\Constants\UserRoles;
+use App\Constants\OrderStatus;
 
 class AdminController extends Controller
 {
@@ -27,6 +29,8 @@ class AdminController extends Controller
     }
 
     public function createNews(Request $request){
+
+        // TODO: validation request
     	$input = $request->all();
     	if($request->hasFile('picture')){
     		$picture = $request->file('picture');
@@ -80,5 +84,20 @@ class AdminController extends Controller
         FreelancerLanguage::where('user_id',$freelancer_id)->delete();
 
         return redirect()->back();
+    }
+
+    public function orders(){
+        $orders = Order::with('details')->where('status',OrderStatus::$requested)->get();
+        return view('admin.orders')
+                ->with('orders',$orders);
+    }
+
+    public function sendOffer(Request $request,$order_id){
+
+        Order::where('id',$order_id)->update([
+            'status' => OrderStatus::$offer
+        ]);
+
+        return redirect()->back()->with('success','Offer sent successfully');
     }
 }
