@@ -19,8 +19,8 @@
 $style = [
 	/* Layout ------------------------------ */
 
-	'body' => 'margin: 0; padding: 0; width: 100%; background-color: #b7e0ed;',
-	'email-wrapper' => 'width: 100%; margin: 0; padding: 0; background-color: #b7e0ed;',
+	'body' => 'margin: 0; padding: 0; width: 100%; background-color: #1a9efc;',
+	'email-wrapper' => 'width: 100%; margin: 0; padding: 0; background-color: #1a9efc;',
 
 	/* Masthead ----------------------- */
 
@@ -43,7 +43,7 @@ $style = [
 
 	'anchor' => 'color: #3869D4;padding:0px 35px 0px 35px;',
 	'header-1' => 'margin-top: 0; color: black; font-size: 21px; font-weight: bold; text-align: left;padding:35px 35px 0px 35px;',
-	'paragraph' => 'margin-top: 0; color: #b7e0ed; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
+	'paragraph' => 'margin-top: 0; color: #1a9efc; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
 	'paragraph-sub' => 'margin-top: 0; color: black; font-size: 18px; line-height: 1.5em; text-align:center;',
 	'paragraph-center' => 'text-align: center;',
 	'paragraph-black' => 'margin-top: 0; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
@@ -51,7 +51,7 @@ $style = [
 	/* Buttons ------------------------------ */
 
 	'button' => 'display: block; display: inline-block; width: 320px; min-height: 20px; padding: 10px;
-	background-color: #b7e0ed; border-radius: 30px; color: #ffffff; font-size: 15px; line-height: 25px;
+	background-color: #1a9efc; border-radius: 30px; color: #ffffff; font-size: 15px; line-height: 25px;
 	text-align: center; text-decoration: none; -webkit-text-size-adjust: none; font-weight: 550;',
 
 	'button--green' => 'background-color: #22BC66;',
@@ -71,7 +71,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 					<tr>
 						<td style="{{ $style['email-masthead'] }}">
 							<a style="{{ $fontFamily }} {{ $style['email-masthead_name'] }}" href="{{ url('/') }}" target="_blank">
-								<img style="height:50px;" width="200" src="{{ $message->embed(public_path() . '/images/onsites-logo.png') }}" alt="" />
+								<img style="height:50px;" width="200" src="./images/thumbnail.png" alt="" />
 							</a>
 						</td>
 					</tr>
@@ -80,7 +80,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 							<table style="{{ $style['email-body_inner'] }}" align="center" width="570" cellpadding="0" cellspacing="0">       
 								<tr>
 									<td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
-										<img style="width:100%;" width="600" src="{{ $message->embed(public_path() . '/email_images/user_pin.jpg') }}" alt="" />
+										<img style="width:100%;" width="600" src="./images/Someone_order.jpg" alt="" />
 										<table align="center" width="550" cellpadding="10" cellspacing="10">
 											<tr>
 												<td>

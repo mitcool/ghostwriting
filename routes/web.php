@@ -8,7 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ClientController;
 
-
+Route::get('/maill',[HomeController::class,'showmail'])->name('show-mail');
 
 Route::get('/change-language/{lang}',[HomeController::class,'changeLanguage'])->name('change-language');
 

@@ -35,6 +35,9 @@ use App\Mail\FreelancerApplication;
 
 class HomeController extends Controller
 {
+    public function showmail(){
+        return view('emails.request-placed');
+    }
 
     public function changeTheme($theme){
          Session::put('theme', $theme);
