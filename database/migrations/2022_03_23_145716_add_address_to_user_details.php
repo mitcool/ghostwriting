@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class AddAddressToUserDetails extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+   
     public function up()
     {
         Schema::table('user_details', function (Blueprint $table) {
@@ -18,11 +14,7 @@ class AddAddressToUserDetails extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
         Schema::table('user_details', function (Blueprint $table) {

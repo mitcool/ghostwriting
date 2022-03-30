@@ -6,9 +6,20 @@ use Illuminate\Http\Request;
 
 use Auth;
 use DB;
+use Mail;
+use PDF;
+use Storage;
 
 use App\Models\User;
 use App\Models\Notification;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Invoice;
+
+use App\Constants\OrderStatus;
+use App\Constants\InvoiceStatus;
+
+use App\Mail\PaymentEmail;
 
 class ClientController extends Controller
 {
@@ -33,4 +44,48 @@ class ClientController extends Controller
 				->with('countries',$countries);
 	}
 
+	public function acceptOffer($order_id){
+		$order = Order::with('invoices')->with('details')->find($order_id);
+		$single_milestone_price = $order->price/$order->milestones;
+		for ($i=1; $i <= $order->milestones; $i++) { 
+			$this->createInvoice($single_milestone_price,$order_id,InvoiceStatus::$pending,$i);
+		}
+		
+		Order::where('id',$order_id)->update(['status' => OrderStatus::$accepted]);
+
+		try {
+			Mail::to($order->email)->send(new PaymentEmail($order));
+		} catch (\Exception $e) {
+			info($e->getMessage());
+		}
+
+		return redirect()->route('welcome')->with('success','Thank you for your order, we can start work when the payment is done');
+	}
+
+	public function declineOffer($order_id){
+		Order::where('id',$order_id)->delete();
+		OrderDetail::where('order_id',$order_id)->delete();
+		return redirect()->route('welcome')->with('success','Your order request was successfully cancelled');
+	}
+
+	private function createInvoice($single_milestone_price,$order_id,$status,$milestone_number){
+		$invoice = new Invoice();
+		$invoice->order_id = $order_id;
+		$invoice->price = $single_milestone_price;
+		$invoice->status = $status;
+		$invoice->milestone_number = $milestone_number;
+		$invoice->save();
+		$this->generatePDF($invoice);
+	}
+
+	private function generatePDF($invoice)
+    {
+    	$data = [];
+    	$data['price'] = $invoice->price;
+        $pdf = PDF::loadView('pages.invoice', $data);
+        $file = $pdf->output();
+		Storage::put('public/'.$invoice->id.'.pdf', $file);
+        return;
+    }
+	
 }

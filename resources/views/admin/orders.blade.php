@@ -21,8 +21,8 @@
 			@foreach ($order->details as $detail)
 				
 				<div class="row bg-white">
-					<div class="col-md-4" style="text-transform: capitalize;">{{$detail->key}}</div>
-					<div class="col-md-4">{{$detail->value}}</div>
+					<div class="col-md-4 py-2 font-weight-bold" style="text-transform: capitalize;">{{$detail->key}}</div>
+					<div class="col-md-4 py-2">{{$detail->value}}</div>
 				</div>	
 			@endforeach
 			<hr>
@@ -38,6 +38,12 @@
 					<form action="{{route('send-offer',$order->id)}}" method="POST">
 						{{csrf_field()}}
 						<input type="number" class="form-control my-2" name="offer" placeholder="Enter Price">
+						<select name="milestones" class="form-control my-2">
+							<option selected disabled="">Please select milestones</option>
+							@for ($i = 1; $i < 6; $i++)
+								<option value="{{$i}}">{{$i}}</option>
+							@endfor
+						</select>
 						<button type="submit" class="red-button w-100 my-2">Send Offer To Client</button>
 						<hr>
 						<span style="font-size:12px;">*When you enter price and send the offer to client, he will receive the offer via email and he should decide - accept or decline it</span>
@@ -58,7 +64,13 @@
 		 button.addEventListener('click',function(){
 		 	let id = this.getAttribute('data-target');
 		 	let div =  document.querySelector(id);
-		 	div.style.display = 'block';
+		 	if(div.style.display == 'none'){
+		 		div.style.display = 'block';
+		 	}
+		 	else{
+		 		div.style.display = 'none';
+		 	}
+		 
 		 });
 	}
 </script>

@@ -14,4 +14,8 @@ class Order extends Model
     public function details(){
     	return $this->hasMany('App\Models\OrderDetail','order_id','id');
     }
+
+    public function invoices(){
+    	return $this->hasMany('App\Models\Invoice','order_id','id');
+    }
 }

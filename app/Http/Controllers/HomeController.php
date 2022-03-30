@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\Service;
 use App\Models\Faq;
-use App\Models\OrderOption;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\News;
@@ -35,9 +34,6 @@ use App\Mail\FreelancerApplication;
 
 class HomeController extends Controller
 {
-    public function showmail(){
-        return view('emails.request-placed');
-    }
 
     public function changeTheme($theme){
          Session::put('theme', $theme);
@@ -51,26 +47,26 @@ class HomeController extends Controller
     }
 
     public function getHome(){
-    	return view('pages.welcome');
+        return view('pages.welcome');
     } 
 
     public function getServices(){
-    	$services = Service::all();
-    	return view('pages.services')
-    		->with('services',$services);
+        $services = Service::all();
+        return view('pages.services')
+            ->with('services',$services);
     }
 
     public function getService($service_slug){
-    	$service = Service::where('slug',$service_slug)->first();
-    	$services = Service::all();
-    	return view('pages.service')
-    		->with('services',$services)
-    		->with('service',$service);
+        $service = Service::where('slug',$service_slug)->first();
+        $services = Service::all();
+        return view('pages.service')
+            ->with('services',$services)
+            ->with('service',$service);
     }
 
     public function getFaq(){
-    	$faqs = Faq::all();
-    	return view('pages.faqs')
+        $faqs = Faq::all();
+        return view('pages.faqs')
             ->with('faqs',$faqs);
     }
 
@@ -109,9 +105,9 @@ class HomeController extends Controller
     }
 
     public function getOrder (){
-        $main_options = OrderOption::all();
+        $languages = Language::all();
         return view('pages.order')
-            ->with('main_options',$main_options);
+            ->with('languages',$languages);
     }
 
     public function sendContactMail(Request $request){
@@ -131,9 +127,6 @@ class HomeController extends Controller
         $order_id = Order::max('id');
         foreach($details as $key => $value){
             $detail = new OrderDetail();
-            if($key=='main'){
-                $value = OrderOption::find($value)->name_en;
-            }
             $detail->order_id = $order_id;
             $detail->key = $key;
             $detail->value = $value;

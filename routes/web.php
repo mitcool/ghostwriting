@@ -8,7 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ClientController;
 
-Route::get('/maill',[HomeController::class,'showmail'])->name('show-mail');
+
 
 Route::get('/change-language/{lang}',[HomeController::class,'changeLanguage'])->name('change-language');
 
@@ -49,6 +49,10 @@ Route::post('/freelancer/apply',[HomeController::class,'freelancerApply'])->name
 Route::get('/client/info',[HomeController::class,'learnMoreClient'])->name('learn-more-client');
 
 Route::get('/verify/{code}',[AuthController::class,'verifyAccount'])->name('verify-account');
+
+Route::get('/offer/accept/{order_id}',[ClientController::class,'acceptOffer'])->name('accept-offer');
+
+Route::get('/offer/decline/{order_id}',[ClientController::class,'declineOffer'])->name('decline-offer');
 
 //Freelancer dashboard
 
@@ -104,6 +108,12 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::get('/orders',[AdminController::class,'orders'])->name('admin-orders');
 
 	Route::post('/offer/send/{order_id}',[AdminController::class,'sendOffer'])->name('send-offer');
+
+	Route::get('/orders/pending-payments',[AdminController::class,'pendingPayments'])->name('pending-payments');
+
+	Route::post('/orders/mark-as-paid/{invoice_id}',[AdminController::class,'markAsPaid'])->name('mark-as-paid');
+
+	Route::get('/orders/in-progress',[AdminController::class,'inProgressOrders'])->name('in-progress-orders');
 
 });
 

@@ -61,19 +61,28 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-             <!-- Nav Item - Utilities Collapse Menu -->
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Orders
+            </div>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('admin-orders')}}">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>Orders</span>
+                    <span>Requested Orders</span>
                 </a>
             </li>
-
-                    
-
-
-
-
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('pending-payments')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Pending Payments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('in-progress-orders')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Orders In Progress</span>
+                </a>
+            </li>
         </ul>
 
         <div id="content-wrapper" class="d-flex flex-column">
@@ -83,13 +92,6 @@
                 </div>
             </div>
          
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer>
         </div>
 
     </div>

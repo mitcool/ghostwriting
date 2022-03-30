@@ -10,12 +10,12 @@ class OrderStatus{
 
 	public static $accepted = 2;
 
-	public static $paid = 4;
+	public static $paid = 3;
 
-	public static $in_progress = 5;
+	public static $in_progress = 4;
 
-	public static $qa_check = 6;
+	public static $qa_check = 5;
 
-	public static $sent_to_client = 7;
+	public static $sent_to_client = 6;
 
 }
