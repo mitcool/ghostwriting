@@ -128,11 +128,21 @@ class AdminController extends Controller
     }
 
     public function markAsPaid(Request $request, $invoice_id){
-
+       
         Invoice::where('id',$invoice_id)->update([
             'status' => InvoiceStatus::$paid,
             'user_id'=>$request->freelancer
         ]);
+
+        $freelancer_mail = User::find($request->freelancer)->email;
+
+        try {
+          Mail::to($freelancer_mail)->send(new FreelancerTaskEmail)
+        } catch (Exception $e) {
+            info($e->getMessage());
+        }
+
+
         /// TODO :: Payment received for invoice email
         /// ToDO :: New Task for freelancer
         return redirect()->back()->with('success','Milestone(invoice) marked as paid successfully');

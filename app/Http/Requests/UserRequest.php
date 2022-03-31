@@ -17,7 +17,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|max:50',
             'surname'=>'required|max:50',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
             'g-recaptcha-response' => 'required|recaptcha'

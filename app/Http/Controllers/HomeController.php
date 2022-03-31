@@ -9,6 +9,7 @@ use Session;
 use Mail;
 use Auth;
 use Hash;
+use Carbon\Carbon;
 
 //models
 use App\Models\User;
@@ -126,6 +127,9 @@ class HomeController extends Controller
 
         $order_id = Order::max('id');
         foreach($details as $key => $value){
+            if($key == 'deadline'){
+                $value = Carbon::parse($value)->format('d-m-Y');
+            }
             $detail = new OrderDetail();
             $detail->order_id = $order_id;
             $detail->key = $key;
@@ -135,7 +139,7 @@ class HomeController extends Controller
         $order_with_details = Order::with('details')->where('id',$order_id)->first();
 
         try {
-            Mail::to('hello@safdsf')->send(new RequestPlaced($order_with_details));
+            Mail::to('hello@adfds.bg')->send(new RequestPlaced($order_with_details));
         } catch (Exception $e) {
             info($e->getMessage());
         }

@@ -10,11 +10,28 @@
 
 @section('page-content')
 
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
+		@foreach($invoices as $invoice)
+			<div class="container-fluid shadow">
+			<div class="row">
+				<div class="col-md-6">Order Number</div>
+				<div class="col-md-6">{{$invoice->id}}</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">Milestone Number</div>
+				<div class="col-md-6">{{$invoice->milestone_number}}</div>
+			</div>
+			@foreach($invoice->order->details as $detail)
+				<div class="row">
+					<div class="text-capitalize">{{$detail->key}}</div>
+					<div>{{$detail->value}}</div>
+				</div class="row">
+			@endforeach
+			<div class="row">
+				<td colspan="2">
+					<hr>
+				</td>
+			</div>
+			</div>
+		@endforeach
+</table>
 @endsection

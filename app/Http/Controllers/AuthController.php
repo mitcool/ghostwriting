@@ -12,6 +12,7 @@ use Hash;
 use Mail;
 
 use App\Models\User;
+use App\Models\UserDetail;
 
 use App\Mail\VerifyAccountMail;
 
