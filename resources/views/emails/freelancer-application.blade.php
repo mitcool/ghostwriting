@@ -71,7 +71,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 					<tr>
 						<td style="{{ $style['email-masthead'] }}">
 							<a style="{{ $fontFamily }} {{ $style['email-masthead_name'] }}" href="{{ url('/') }}" target="_blank">
-								<img style="height:50px;" width="200" src="./images/thumbnail.png" alt="" />
+								<img style="height:50px;" width="200" src="{{asset('images/thumbnail.png')}}" alt="" />
 							</a>
 						</td>
 					</tr>
@@ -80,7 +80,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 							<table style="{{ $style['email-body_inner'] }}" align="center" width="570" cellpadding="0" cellspacing="0">       
 								<tr>
 									<td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
-										<img style="width:100%;" width="600" src="./images/Someone_order.jpg" alt="" />
+										<img style="width:100%;" width="600" src="{{asset('images/Someone_order.jpg')}}" alt="" />
 										<table align="center" width="550" cellpadding="10" cellspacing="10">
 											<tr>
 												<td>
@@ -89,13 +89,10 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 														Dear admin we have a new freelancer application: 
 													</h1>
 													<p style="{{ $style['paragraph-black'] }}">
-														<p>{{$data['name']}}</p>
-														<p>{{$data['email']}}</p>
+														Name: {{$data['name']}}
+														Email: {{$data['email']}}
 														<br/>
 													</p>
-													<h1 style="{{ $style['header-1'] }}">
-														Dear admin we have a new freelancer application: 
-													</h1>
 													<br/>
 												</td>
 											</tr>
