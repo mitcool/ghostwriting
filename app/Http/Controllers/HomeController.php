@@ -33,12 +33,18 @@ use App\Constants\UserRoles;
 use App\Mail\RequestPlaced;
 use App\Mail\FreelancerApplication;
 use App\Mail\ContactEmail;
-
+use App\Mail\PaymentEmail;
 //requests
 use App\Http\Requests\ContactMailRequest;
 
 class HomeController extends Controller
 {
+    // public function test(){
+    //     $order =[
+    //         'email' => 'hasan'
+    //     ];
+    //     Mail::to('hello@safdsf')->send(new PaymentEmail($order));
+    // }
 
     public function changeTheme($theme){
          Session::put('theme', $theme);
@@ -131,7 +137,7 @@ class HomeController extends Controller
             info($e->getMessage());
         }
 
-        return view('view_name');
+        return redirect()->back()->with('success','Message sent successfully');
         
 
     }

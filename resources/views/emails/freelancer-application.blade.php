@@ -90,6 +90,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 													</h1>
 													<p style="{{ $style['paragraph-black'] }}">
 														Name: {{$data['name']}}
+														<br>
 														Email: {{$data['email']}}
 														<br/>
 													</p>

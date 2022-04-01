@@ -9,7 +9,7 @@ use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ClientController;
 
 
-
+Route::get('/test',[HomeController::class,'test']);
 Route::get('/change-language/{lang}',[HomeController::class,'changeLanguage'])->name('change-language');
 
 Route::get('/change-theme/{type}',[HomeController::class,'changeTheme'])->name('change-theme');

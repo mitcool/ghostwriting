@@ -86,12 +86,14 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 												<td>
 													<br/>
 													<h1 style="{{ $style['header-1'] }}">
-														Dear admin we have a new freelancer application: 
+														Dear admin we have a new message: 
 													</h1>
 													<p style="{{ $style['paragraph-black'] }}">
 														Name: {{$data['name']}}
+														<br>
 														Email: {{$data['email']}}
-														Email: {{$data['message']}}
+														<br>
+														Message: {{$data['message']}}
 														<br/>
 													</p>
 													<br/>
