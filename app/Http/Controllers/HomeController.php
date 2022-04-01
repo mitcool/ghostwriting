@@ -31,6 +31,10 @@ use App\Constants\UserRoles;
 //mails
 use App\Mail\RequestPlaced;
 use App\Mail\FreelancerApplication;
+use App\Mail\ContactEmail;
+
+//requests
+use App\Http\Requests\ContactMailRequest;
 
 class HomeController extends Controller
 {
@@ -110,8 +114,25 @@ class HomeController extends Controller
             ->with('languages',$languages);
     }
 
-    public function sendContactMail(Request $request){
-        dd($request->all());
+    public function sendContactMail(ContactMailRequest $request){
+        
+        $validatedData = $request->validated();
+
+        $data=[
+            'name' => $request->name,
+            'email' => $request->email,
+            'message' => $request->message,
+        ];
+
+        try {
+            Mail::to('hello@safdsf')->send(new ContactEmail($data));
+        } catch (Exception $e) {
+            info($e->getMessage());
+        }
+
+        return view('view_name');
+        
+
     }
 
     public function requestOrder(Request $request){
