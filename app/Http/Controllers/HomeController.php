@@ -39,12 +39,9 @@ use App\Http\Requests\ContactMailRequest;
 
 class HomeController extends Controller
 {
-    // public function test(){
-    //     $order =[
-    //         'email' => 'hasan'
-    //     ];
-    //     Mail::to('hello@safdsf')->send(new PaymentEmail($order));
-    // }
+    public function test(){
+        return view('vendor.cookie-consent.index');
+    }
 
     public function changeTheme($theme){
          Session::put('theme', $theme);

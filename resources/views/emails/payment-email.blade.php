@@ -103,6 +103,9 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 													<p style="{{ $style['paragraph-black'] }}">
 														{{-- Maybe attach invoice here --}}
 													</p>
+													<p style="{{ $style['paragraph-black'] }}">
+														This email message is being sent to you automatically in connection with the processing of a project because you registered at the GHOSTWRITING.COM portal as a client, freelancer, or administrator as well as accepted the relevant terms and conditions in the course of the registration process. Please do not reply to this email. Log in to your account to carry out the appropriate actions and to use the appropriate communication options available.
+													</p>
 													<br/>
 												</td>
 											</tr>

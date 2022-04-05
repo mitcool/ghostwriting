@@ -9,6 +9,7 @@
 	</div>
 
 	@yield('content')
+	@yield('cookies')
 
 	<x-modals/>
 
