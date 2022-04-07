@@ -1,11 +1,12 @@
 @php
     $locale = $app->getLocale();
 @endphp
+<a href="javascript:void(0)" class="js-lcc-settings-toggle">@lang('cookie-consent::texts.alert_settings')</a>
 <link rel="stylesheet" type="text/css" href="{{asset("vendor/cookie-consent/css/cookie-consent.css")}}">
 <div role="dialog" aria-labelledby="lcc-modal-alert-label" aria-describedby="lcc-modal-alert-desc" aria-modal="true" class="lcc-modal lcc-modal--alert js-lcc-modal js-lcc-modal-alert" style="display: none;"
      data-cookie-key="{{ config('cookie-consent.cookie_key') }}"
      data-cookie-value-analytics="{{ config('cookie-consent.cookie_value_analytics') }}"
-     data-cookie-value-marketing="{{ config('cookie-consent.cookie_value_marketing') }}"
+
      data-cookie-value-both="{{ config('cookie-consent.cookie_value_both') }}"
      data-cookie-value-none="{{ config('cookie-consent.cookie_value_none') }}"
      data-cookie-expiration-days="{{ config('cookie-consent.cookie_expiration_days') }}"
@@ -54,39 +55,59 @@
                 </button>
             </div>
             <div class="lcc-modal__section">
-                <label for="lcc-checkbox-essential" class="lcc-label">
-                    <input type="checkbox" id="lcc-checkbox-essential" disabled="disabled" checked="checked">
-                    <span>@lang('cookie-consent::texts.setting_essential')</span>
+                <h4>@lang('cookie-consent::texts.required_cookies')</h4>
+                <label for="lcc-checkbox-language" class="lcc-label">
+                    <input type="checkbox" id="lcc-checkbox-language" checked="checked">
+                    <span>@lang('cookie-consent::texts.language')</span>
                 </label>
                 <p class="lcc-text">
-                    @lang('cookie-consent::texts.setting_essential_text')
+                    @lang('cookie-consent::texts.language_text')
                 </p>
             </div>
             <div class="lcc-modal__section">
-                <label for="lcc-checkbox-funtcional" class="lcc-label">
-                    <input type="checkbox" id="lcc-checkbox-funtcional" disabled="disabled" checked="checked">
-                    <span>@lang('cookie-consent::texts.setting_functional')</span>
+                <h4>@lang('cookie-consent::texts.functional')</h4>
+                <label for="lcc-checkbox-youtube" class="lcc-label">
+                    <input type="checkbox" id="lcc-checkbox-youtube">
+                    <span>@lang('cookie-consent::texts.youtube')</span>
                 </label>
                 <p class="lcc-text">
-                    @lang('cookie-consent::texts.setting_functional_text')
+                    @lang('cookie-consent::texts.youtube_text')
                 </p>
             </div>
             <div class="lcc-modal__section">
-                <label for="lcc-checkbox-analytics" class="lcc-label">
-                    <input type="checkbox" id="lcc-checkbox-analytics">
-                    <span>@lang('cookie-consent::texts.setting_analytics')</span>
+                <label for="lcc-checkbox-landbot" class="lcc-label">
+                    <input type="checkbox" id="lcc-checkbox-landbot">
+                    <span>@lang('cookie-consent::texts.landbot')</span>
                 </label>
                 <p class="lcc-text">
-                    @lang('cookie-consent::texts.setting_analytics_text')
+                    @lang('cookie-consent::texts.landbot_text')
                 </p>
             </div>
             <div class="lcc-modal__section">
                 <label for="lcc-checkbox-marketing" class="lcc-label">
                     <input type="checkbox" id="lcc-checkbox-marketing">
-                    <span>@lang('cookie-consent::texts.setting_marketing')</span>
+                    <span>@lang('cookie-consent::texts.google_maps')</span>
                 </label>
                 <p class="lcc-text">
-                    @lang('cookie-consent::texts.setting_marketing_text')
+                    @lang('cookie-consent::texts.google_maps_text')
+                </p>
+            </div>
+            <div class="lcc-modal__section">
+                <h4>@lang('cookie-consent::texts.tracking')</h4>
+                <label for="lcc-checkbox-ads" class="lcc-label">
+                    <input type="checkbox" id="lcc-checkbox-ads">
+                    <span>@lang('cookie-consent::texts.google_ads')</span>
+                </label>
+                <label for="lcc-checkbox-facebook" class="lcc-label">
+                    <input type="checkbox" id="lcc-checkbox-facebook">
+                    <span>@lang('cookie-consent::texts.facebook')</span>
+                </label>
+                <label for="lcc-checkbox-analytics" class="lcc-label">
+                    <input type="checkbox" id="lcc-checkbox-analytics">
+                    <span>@lang('cookie-consent::texts.google_analytics')</span>
+                </label>
+                <p class="lcc-text">
+                    @lang('cookie-consent::texts.google_analytics_text')
                 </p>
             </div>
         </div>
