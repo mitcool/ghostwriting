@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class FreelancerTaskEmail extends Mailable
+class OrderCompletedClient extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,6 +18,6 @@ class FreelancerTaskEmail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.freelancer-task');
+        return $this->view('emails.order-completed-client');
     }
 }

@@ -11,4 +11,8 @@ class FreelancerSubject extends Model
 
     protected $table = 'freelancer_subjects';
     public $timestamps = false;
+
+    public function subject_name(){
+    	return $this->hasOne('App\Models\Subject','id','subject_id');
+    }
 }

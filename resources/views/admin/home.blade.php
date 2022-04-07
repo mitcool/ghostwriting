@@ -24,25 +24,20 @@
 
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{route('admin')}}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
 
-            <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
             <div class="sidebar-heading">
                 Menu
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('add-news')}}">
                     <i class="fas fa-fw fa-cog"></i>
@@ -57,11 +52,8 @@
                     <span>Freelancer</span>
                 </a>
             </li>
-
-            <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
             <div class="sidebar-heading">
                 Orders
             </div>
@@ -83,17 +75,42 @@
                     <span>Orders In Progress</span>
                 </a>
             </li>
+            <div class="sidebar-heading">
+                PRICES
+            </div>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-prices')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Calculator Prices</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            
+            <div class="sidebar-heading">
+                CONTENT
+            </div>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-faq')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Faq</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-how-it-works')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>How It Works</span>
+                </a>
+            </li>
         </ul>
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <div class="container-fluid">
+                    <x-flash-messages/>
                     @yield('content')
                 </div>
             </div>
-         
         </div>
-
     </div>
 
     <a class="scroll-to-top rounded" href="#page-top">

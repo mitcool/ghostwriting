@@ -24,13 +24,18 @@
 		  	@endif
 	  	</a>
 	  </li>
-
 	  @else
 	  <li class="list-group-item mt-2 border-0 bg-transparent">
 	  	<a href="{{route('order')}}" style="color:black;text-decoration: none;">
-	  		<span class="theme-border theme-radius bg-white" style="width:50px;height: 50px;padding: 10px;">
-	  		<i class="fa-solid fa-basket-shopping"></i>
-	  		</span>
+	  		@if(Request::route()->getName()=='order')
+		  		<span class="theme-background theme-radius text-white" style="width:50px;height: 50px;padding: 10px;">
+		  		<i class="fa-solid fa-basket-shopping"></i>
+		  		</span>
+	  		@else
+		  		<span class="theme-border theme-radius bg-white" style="width:50px;height: 50px;padding: 10px;">
+		  		<i class="fa-solid fa-basket-shopping"></i>
+		  		</span>
+	  		@endif
 	  	</a>
 	  </li>
 	  @endif

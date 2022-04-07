@@ -6,8 +6,13 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Str;
+
+use App\Constants\UserRoles;
+use Hash;
 
 use App\Models\Notification;
+use App\Models\User;
 
 class Controller extends BaseController
 {
@@ -38,5 +43,17 @@ class Controller extends BaseController
         $notification->user_id = $user_id;
         $notification->save();
     }
+
+    public function createUser(array $data)
+    {
+      return User::create([
+        'name' => $data['name'],
+        'surname'=>$data['surname'],
+        'email' => $data['email'],
+        'role' => $data['role'],
+        'password' => Hash::make($data['password']),
+        'confirmation_code' => Str::random(30)
+      ]);
+    } 
 
 }

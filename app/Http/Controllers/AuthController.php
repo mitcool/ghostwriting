@@ -22,7 +22,6 @@ class AuthController extends Controller
 {
 	//TODO: Login Request
     public function login(Request $request){
-
     	$credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             return redirect()->intended('dashboard');
@@ -33,29 +32,24 @@ class AuthController extends Controller
    public function register(UserRequest $request)
    {  
         $data = $request->validated();
-        $user = $this->create($data);
+        $data["role"] = UserRoles::$notVerifiedClient;
+        $user = $this->createUser($data);
         UserDetail::insert(['user_id'=>$user->id]);
-        Mail::to($data['email'])->send(new VerifyAccountMail($user->confirmation_code));
+        try {
+             Mail::to($data['email'])->send(new VerifyAccountMail($user->confirmation_code));
+        } catch (\Exception $e) {
+            info($e->getMessage());
+        }
+       
         return redirect()->back()->with('success','Successfully registered');
     }
 
     public function logout(){
 
         Auth::logout();
-        return redirect()->back();
+        return redirect()->route('welcome');
     }
 
-    public function create(array $data)
-    {
-      return User::create([
-        'name' => $data['name'],
-        'surname'=>$data['surname'],
-        'email' => $data['email'],
-        'role' => UserRoles::$notVerifiedClient,
-        'password' => Hash::make($data['password']),
-        'confirmation_code' => Str::random(30)
-      ]);
-    } 
 
     public function dashboard(){
     	if(!Auth::user()){
@@ -77,6 +71,9 @@ class AuthController extends Controller
         }
         if(Auth::user()->role == UserRoles::$clientRole){
             return redirect()->route('client-messages');
+        }
+        if(Auth::user()->role == UserRoles::$qaRole){
+            return redirect()->route('qa');
         }
     }
 

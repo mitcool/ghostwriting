@@ -1,0 +1,1 @@
+Dear Admin the milestone of order ..... was completed successfully

@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
            JobSeeder::class,
            SubjectSeeder::class,
            LanguageSeeder::class,
+           ServiceSeeder::class,
+           FaqSeeder::class,
         ]);
     }
 }

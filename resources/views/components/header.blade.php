@@ -25,7 +25,11 @@
       <div class="d-flex">
         @guest
           <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#login_modal">Sign In</button>
+          @if(Session::get('theme')=='freelancer')
+           <a class="btn theme-background mx-2 text-white" style="border-radius:30px;" href="{{route('freelancer-application')}}">Get Started</a>
+          @else
           <button class="btn theme-background mx-2 text-white" style="border-radius:30px;" data-bs-toggle="modal" data-bs-target="#register_modal">Get Started</button>
+          @endif
         @else
           <a style="border-radius:30px;" class="btn theme-background mx-2 text-white" href="{{route('dashboard')}}">Dashboard</a>
           <form action="{{route('logout')}}" method="POST">

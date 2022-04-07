@@ -49,14 +49,14 @@
 					<div class="col-md-6">
 						<select name="main" class="form-control" id="main_category" required>
 							<option selected disabled value="">Please select main category</option>
-							<option value="1">Literature Research</option>
-							<option value="2">Topic Proposal</option>
-							<option value="3">Outline</option>
-							<option value="4">Expose</option>
-							<option value="5">Academic text types</option>
-							<option value="6">Editoral work</option>
-							<option value="7">Additional services</option>
-							<option value="8">Other text types</option>
+							<option value="Literature Research">Literature Research</option>
+							<option value="Topic Proposal">Topic Proposal</option>
+							<option value="Outline">Outline</option>
+							<option value="Expose">Expose</option>
+							<option value="Academic text types">Academic text types</option>
+							<option value="Editoral work">Editoral work</option>
+							<option value="Additional services">Additional services</option>
+							<option value="Other text types">Other text types</option>
 						</select>	
 					</div>
 					<div class="col-md-6"></div>
@@ -72,7 +72,7 @@
 
 					<div class="col-md-6" id="submit-button">
 						<hr>
-						<button type="submit" style="background:#F84162;color:white;border:none;outline: none;border-radius:30px;padding:10px 20px;">Send request</button>
+						<button type="submit" class="red-button">Send request</button>
 					</div>
 				</div>
 				
@@ -87,6 +87,9 @@
 @section('scripts')
 
 <script type="text/javascript">
+
+
+	{{-- TODO:: Refactor the script --}}
 	
 	let main_select = document.getElementById('main_category');
 
@@ -103,7 +106,7 @@
 		for (let o of all_options){
 			o.style.display = 'none';
 		}
-		if(this.value == 1){
+		if(this.value == 'Literature Research'){
 			let options = document.querySelectorAll('.literature');
 			for(let option of  options){
 				option.style.display = 'block';
@@ -118,44 +121,104 @@
 				i.removeAttribute('disabled');
 			}
 		}
-		if(this.value == 2 || this.value==3){
+		if(this.value == 'Topic Proposal' || this.value == 'Outline'){
 			let options = document.querySelectorAll('.topic');
 			for(let option of  options){
 				option.style.display = 'block';
 			}
+			let user_inputs = document.querySelectorAll('.user-info-input');
+			for (let i of user_inputs) {
+				i.removeAttribute('disabled');
+			}
+			let literature_inputs = document.querySelectorAll('.topic .form-control');
+			document.getElementById('main_category').removeAttribute('disabled');
+			for (let i of literature_inputs) {
+				i.removeAttribute('disabled');
+			}
 		}
-		if(this.value == 4){
+		if(this.value == 'Expose'){
 			let options = document.querySelectorAll('.expose');
 			for(let option of  options){
 				option.style.display = 'block';
 			}
+
+			let user_inputs = document.querySelectorAll('.user-info-input');
+			for (let i of user_inputs) {
+				i.removeAttribute('disabled');
+			}
+			let literature_inputs = document.querySelectorAll('.expose .form-control');
+			document.getElementById('main_category').removeAttribute('disabled');
+			for (let i of literature_inputs) {
+				i.removeAttribute('disabled');
+			}
 		}
-		if(this.value == 5){
+		if(this.value == 'Academic text types'){
 
 			let options = document.querySelectorAll('.academic');
 			for(let option of  options){
 				option.style.display = 'block';
 			}
+			let user_inputs = document.querySelectorAll('.user-info-input');
+			for (let i of user_inputs) {
+				i.removeAttribute('disabled');
+			}
+			let literature_inputs = document.querySelectorAll('.academic .form-control');
+			document.getElementById('main_category').removeAttribute('disabled');
+			for (let i of literature_inputs) {
+				i.removeAttribute('disabled');
+			}
 		}
-		if(this.value == 6){
+		if(this.value == 'Editoral work'){
 
 			let options = document.querySelectorAll('.editoral');
 			for(let option of  options){
 				option.style.display = 'block';
 			}
+
+			let user_inputs = document.querySelectorAll('.user-info-input');
+			for (let i of user_inputs) {
+				i.removeAttribute('disabled');
+			}
+			let literature_inputs = document.querySelectorAll('.editoral .form-control');
+			document.getElementById('main_category').removeAttribute('disabled');
+			for (let i of literature_inputs) {
+				i.removeAttribute('disabled');
+			}
 		}
-		if(this.value == 7){
+		if(this.value == 'Additional services'){
 
 			let options = document.querySelectorAll('.additional');
 			for(let option of  options){
 				option.style.display = 'block';
 			}
+
+			let user_inputs = document.querySelectorAll('.user-info-input');
+			for (let i of user_inputs) {
+				i.removeAttribute('disabled');
+			}
+
+			let literature_inputs = document.querySelectorAll('.additional .form-control');
+			document.getElementById('main_category').removeAttribute('disabled');
+			for (let i of literature_inputs) {
+				i.removeAttribute('disabled');
+			}
 		}
-		if(this.value == 8){
+		if(this.value == 'Other text types'){
 
 			let options = document.querySelectorAll('.other');
 			for(let option of  options){
 				option.style.display = 'block';
+			}
+
+			let user_inputs = document.querySelectorAll('.user-info-input');
+			for (let i of user_inputs) {
+				i.removeAttribute('disabled');
+			}
+
+			let literature_inputs = document.querySelectorAll('.other .form-control');
+			document.getElementById('main_category').removeAttribute('disabled');
+			for (let i of literature_inputs) {
+				i.removeAttribute('disabled');
 			}
 		}
 	})

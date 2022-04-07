@@ -35,7 +35,7 @@
               </div>
               <hr>
               <div class="d-flex justify-content-center">
-                <button class="btn btn-primary">Register</button>
+                <button class="red-button">Register</button>
               </div>
           </form>
       </div>
@@ -65,7 +65,7 @@
             </div>
             <hr>
             <div class="text-center">
-              <button class="btn btn-primary">Send</button>
+              <button class="red-button">Send</button>
             </div>
         </form>
       </div>

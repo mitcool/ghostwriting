@@ -26,26 +26,28 @@ use App\Models\Freelancer;
 use App\Models\FreelancerJob;
 use App\Models\FreelancerLanguage;
 use App\Models\FreelancerSubject;
+use App\Models\CalculatorPrice;
 
+//constants
 use App\Constants\UserRoles;
+use App\Constants\UserMessages;
 
 //mails
 use App\Mail\RequestPlaced;
 use App\Mail\FreelancerApplication;
 use App\Mail\ContactEmail;
 use App\Mail\PaymentEmail;
+
 //requests
 use App\Http\Requests\ContactMailRequest;
+use App\Http\Requests\FreelancerRequest;
 
 class HomeController extends Controller
 {
-    public function test(){
-        return view('vendor.cookie-consent.index');
-    }
 
     public function changeTheme($theme){
-         Session::put('theme', $theme);
-         return redirect()->back();
+        Session::put('theme', $theme);
+        return redirect()->back();
     }
 
     public function changeLanguage($lang){
@@ -73,7 +75,7 @@ class HomeController extends Controller
     }
 
     public function getFaq(){
-        $faqs = Faq::all();
+        $faqs = Faq::where('type',0)->get();
         return view('pages.faqs')
             ->with('faqs',$faqs);
     }
@@ -83,7 +85,10 @@ class HomeController extends Controller
     }
 
     public function getPrices(){
-        return view('pages.prices');
+        $prices = CalculatorPrice::get()->groupBy('question');
+        
+        return view('pages.prices')
+                            ->with('prices',$prices);
     }
 
     public function getAgb(){
@@ -119,24 +124,16 @@ class HomeController extends Controller
     }
 
     public function sendContactMail(ContactMailRequest $request){
-        
         $validatedData = $request->validated();
-
-        $data=[
-            'name' => $request->name,
-            'email' => $request->email,
-            'message' => $request->message,
-        ];
-
-        try {
-            Mail::to('hello@safdsf')->send(new ContactEmail($data));
-        } catch (Exception $e) {
-            info($e->getMessage());
+        $admins = User::where('role',UserRoles::$adminRole);
+        foreach ($admins as $admin) {
+            try {
+                Mail::to($admin->email)->send(new ContactEmail($validatedData));
+            } catch (Exception $e) {
+                info($e->getMessage());
+            }
         }
-
-        return redirect()->back()->with('success','Message sent successfully');
-        
-
+        return redirect()->back()->with('success',UserMessages::$mail_sent);
     }
 
     public function requestOrder(Request $request){
@@ -144,10 +141,11 @@ class HomeController extends Controller
         $details = $request->except('name','phone','email','_token');
         $order = new Order();
         $order->status = 0;
-        $order->email = $input['email'];
-        $order->phone = $input['phone'];
-        $order->name = $input['name'];
+        $order->email = Auth::user() ? Auth::user()->email : $input['email'];
+        $order->phone = Auth::user() ? Auth::user()->details->phone : $input['phone'];
+        $order->name = Auth::user() ? Auth::user()->name : $input['name'];
         $order->save();
+        $admins = User::where('role',UserRoles::$adminRole)->get();
 
         $order_id = Order::max('id');
         foreach($details as $key => $value){
@@ -162,13 +160,14 @@ class HomeController extends Controller
         }
         $order_with_details = Order::with('details')->where('id',$order_id)->first();
 
-        try {
-            Mail::to('hello@adfds.bg')->send(new RequestPlaced($order_with_details));
-        } catch (Exception $e) {
-            info($e->getMessage());
+        foreach ($admins as $admin) {
+           try {
+                Mail::to($admin->email)->send(new RequestPlaced($order_with_details));
+            } catch (Exception $e) {
+                info($e->getMessage());
+            }
         }
-
-        return redirect()->back()->with('success','Request placed successfully');
+        return redirect()->back()->with('success',UserMessages::$request_placed);
     }
 
     public function getFreelancerApplication(){
@@ -181,27 +180,26 @@ class HomeController extends Controller
             ->with('languages',$languages);
     }
 
-    public function freelancerApply(Request $request){
-        //TODO::  Validation request 
+    public function freelancerApply(FreelancerRequest $request){
+
+        $input = $request->validated();
         $jobs = $request->jobs;
         $languages = $request->languages;
         $subjects = $request->subjects;
 
-         // create user with role_id  == notVerifiedFreelancer 6
-        $user = User::create([
-           'name' => $request->name,
-           'email' => $request->email,
-           'password' => Hash::make($request->password),
-           'role' => UserRoles::$notVerifiedFreelancer
-        ]);
+        // create user in Users Table
+        $user_data = $request->only('name','surname','email','role','password');
+        $user_data["role"] = UserRoles::$notVerifiedFreelancer;
+        $user = $this->createUser($user_data);
 
+        //upload user
         $curriculum_vitae_file_name = $this->uploadFile($request->file('curriculum_vitae'),'/public/freelancers/curriculum_vitae');
         $work_samples_file_name = $this->uploadFile($request->file('work_samples'),'/public/freelancers/working_samples');
         $certificates_file_name = $this->uploadFile($request->file('certificates'),'/public/freelancers/certificates');
 
         //insert freelancer
         Freelancer::insert([
-            'message' => $request->message,
+            'message' => $input['message'],
             'curriculum_vitae' => $curriculum_vitae_file_name,
             'work_samples' => $work_samples_file_name,
             'certificates' => $certificates_file_name,
@@ -232,42 +230,41 @@ class HomeController extends Controller
            ]);
         }
 
-        $admin = User::where('role',1)->first();
-        try {
-            Mail::to($admin->email)->send(new FreelancerApplication($user));
-        } catch (Exception $e) {
-            info($e->getMessage());
+        //Mail to admins
+        $admins = User::where('role',UserRoles::$adminRole)->get();
+        foreach ($admins as $admin) {
+            try {
+                Mail::to($admin->email)->send(new FreelancerApplication($user));
+            } catch (Exception $e) {
+                info($e->getMessage());
+            }
         }
-
         $this->insertNotification('New Freelancer Application',$admin->id);
-
-        return redirect()->back();
+        return redirect()->back()->with('success',UserMessages::$freelancer_apply_success);
     }
 
     public function learnMoreClient(){
-        $faqs = Faq::all();
+        $faqs = Faq::where('type',1)->get();
         return view('pages.client-learn-more')
             ->with('faqs',$faqs);
     }
 
     public function changeDetails(Request $request){
-
-        //TODO::Request validation
+        $input = $request->only('phone','phone_code','country_id','city','avatar','zip','company','vat','skype','address');
         $user_id = Auth::id();
-
         UserDetail::where('user_id',$user_id)->update([
-            'phone'  => $request->phone,   
-            'phone_code' => $request->phone_code,
-            'country_id'  => $request->country_id, 
-            'city'     => $request->city,
-            'avatar'  => $request->avatar, 
-            'zip'   => $request->zip,
-            'company' => $request->company, 
-            'vat' => $request->vat,
-            'skype' => $request->skype,
-            'address' =>  $request->address
+            'phone'  => $input['phone'],   
+            'phone_code' => $input['phone_code'],
+            'country_id'  => $input['country_id'], 
+            'city'     => $input['city'],
+            'avatar'  => $input['avatar'], 
+            'zip'   => $input['zip'],
+            'company' => $input['company'], 
+            'vat' => $input['vat'],
+            'skype' => $input['skype'],
+            'address' =>  $input['address']
          ]);
 
-        return redirect()->back()->with('success','Your details has been changed successfully');
+        return redirect()->back()->with('success',UserMessages::$details_changed);
     }
 }

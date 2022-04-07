@@ -44,7 +44,7 @@
 						<img src="{{asset('images/step3.png')}}" class="shadow">
 						<h3 style="margin-top:10px;">Step 3</h3>
 						<p>Accept many exciting project offers and start making money immediately</p>
-					</div>1
+					</div>
 				</div>
 			</div>
 		</div>

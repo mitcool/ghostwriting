@@ -1,12 +1,3 @@
- ☐ notification delete fuctions on client dashboard
- ☐ client orders 
- ✔ client setting @done (22-03-23 16:58)
+ ☐ Faq + How it works page admin part
+ ☐ Approve freelancer email + document for payment 
  
- Order:
-   ✔ Client Request (status 0) @done (22-03-25 08:37)
-   ✔ Admin Send Offer (status 1) @done (22-03-25 08:37)
-   ✔ Client Accept (status 2) / () @done (22-03-25 08:37)
-   ✔ Admin Appoint work (status 3) @done (22-03-25 14:53)
-   ☐ Freelancer send work to QA (status 4)
-   ☐ QA Approve and send back to client (status 5)
-   

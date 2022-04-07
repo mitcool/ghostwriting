@@ -11,4 +11,8 @@ class FreelancerLanguage extends Model
 
     protected $table = 'freelancer_languages';
     public $timestamps = false;
+
+    public function language_name(){
+    	return $this->hasOne('App\Models\Language','id','language_id');
+    }
 }

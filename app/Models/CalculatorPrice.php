@@ -5,14 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Language extends Model
+class CalculatorPrice extends Model
 {
     use HasFactory;
 
-    protected $table = 'languages';
+    protected $table = 'calculator_prices';
     public $timestamps = false;
-
-    public function language_name(){
-    	return $this->hasOne('App\Models\Language','id','language_id');
-    }
 }

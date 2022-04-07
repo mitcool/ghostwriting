@@ -54,6 +54,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\FreelancerJob','user_id','id');
     }
 
+     public function freelancer_subjects(){
+        return $this->hasMany('App\Models\FreelancerSubject','user_id','id');
+    }
+
+     public function freelancer_languages(){
+        return $this->hasMany('App\Models\FreelancerLanguage','user_id','id');
+    }
+
     public function details(){
 
          return $this->hasOne('App\Models\UserDetail','user_id','id');

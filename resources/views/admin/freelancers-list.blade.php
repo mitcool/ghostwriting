@@ -22,12 +22,27 @@
 			<hr>
 			<div class="row">
 				<div class="col-md-6">
-					<p class="font-weight-bold">Jobs:</p>
-					<ul class="list-group">
+					<p class="font-weight-bold m-0">Jobs:</p>
+					<ul class="list-group border-0">
 						 @foreach($user->freelancer_jobs as $job)
 							<li class="list-group-item">{{$job->job_name->name}}</li>
 						@endforeach
 					</ul>
+					<hr>
+					<p class="font-weight-bold m-0">Subjects:</p>
+					<ul class="list-group border-0">
+						 @foreach($user->freelancer_subjects as $subject)
+							<li class="list-group-item">{{$subject->subject_name->name}}</li>
+						@endforeach
+					</ul>
+					<hr>
+					<p class="font-weight-bold m-0">Languages:</p>
+					<ul class="list-group border-0">
+						 @foreach($user->freelancer_languages as $language)
+							<li class="list-group-item">{{$language->language_name->name}}</li>
+						@endforeach
+					</ul>
+					<hr>
 				</div>
 				<div class="col-md-6">
 					<p class="font-weight-bold">Documents:</p>

@@ -15,12 +15,16 @@ use App\Models\FreelancerLanguage;
 use App\Models\FreelancerJob;
 use App\Models\Order;
 use App\Models\Invoice;
+use App\Models\Faq;
+use App\Models\CalculatorPrice;
 
 use App\Constants\UserRoles;
 use App\Constants\OrderStatus;
 use App\Constants\InvoiceStatus;
 
 use App\Mail\OfferMail;
+use App\Mail\FreelancerApprove;
+use App\Mail\FreelancerTaskEmail;
 
 class AdminController extends Controller
 {
@@ -67,7 +71,12 @@ class AdminController extends Controller
 
     public function approveFreelancer($freelancer_id){
         User::where('id',$freelancer_id)->update(['role' => UserRoles::$freelancerRole]);
-        //mail to user approved
+        $freelancer = User::find($freelancer_id);
+        try {
+            Mail::to($freelancer->email)->send(new FreelancerApprove($freelancer));
+        } catch (\Exception $e) {
+            
+        }
         return redirect()->back();
     }
 
@@ -137,7 +146,7 @@ class AdminController extends Controller
         $freelancer_mail = User::find($request->freelancer)->email;
 
         try {
-          Mail::to($freelancer_mail)->send(new FreelancerTaskEmail)
+          Mail::to($freelancer_mail)->send(new FreelancerTaskEmail);
         } catch (Exception $e) {
             info($e->getMessage());
         }
@@ -152,6 +161,44 @@ class AdminController extends Controller
         $invoices = Invoice::where('status',InvoiceStatus::$paid)->get();
         return view('admin.in-progress-orders')
                 ->with('invoices',$invoices);
+    }
+
+    /// FAQ => type == 0 ; How it works => type == 1 ; // we use the same db table because logic and design are the same
+    public function showFaqPanel(){
+        $faqs = Faq::where('type',0)->get();
+        return view('admin.faq')->with('faqs',$faqs);
+    }
+
+    public function showHowItWorksPanel(){
+        $faqs = Faq::where('type',1)->get();
+        return view('admin.how-it-works')->with('faqs',$faqs);
+    }
+
+    public function editFaq(Request $request){
+
+        Faq::where('id',$request->faq_id)->update([
+            'question_en' => $request->question_en,
+            "question_de" =>  $request->question_de,
+            "answer_en" =>  $request->answer_en,
+            "answer_de" => $request->answer_de,
+        ]);
+
+        return redirect()->back()->with('success','FAQ updated successfully');
+    }
+
+    public function prices(){
+        $prices = CalculatorPrice::all();
+        return view('admin.prices')
+                ->with('prices',$prices);
+    }
+
+    public function updatePrices(Request $request){
+       $ids = $request->ids;
+       $prices = $request->prices;
+       for ($i=0; $i < count($ids); $i++) { 
+           CalculatorPrice::where('id',$ids[$i])->update(['price' => $prices[$i]]);
+       }
+        return redirect()->back()->with('success','Prices updated successfully');
     }
 
 }

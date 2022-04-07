@@ -4,6 +4,8 @@ namespace App\Constants;
 
 class UserRoles{
 
+	public static $qaRole = 0; 
+
 	public static $adminRole = 1;
 
 	public static $clientRole = 2;

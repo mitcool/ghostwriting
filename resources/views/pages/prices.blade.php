@@ -19,30 +19,19 @@
 							</div>
 						</div>
 						<div>
-							<select id="num1" class="form-control my-2">
-								<option value="0">Select main category</option>
-								<option value="10">Category 1</option>
-								<option value="20">Category 2</option>
-								<option value="30">Category 3</option>
-							</select>
-							<select id="num2" class="form-control my-2">
-								<option value="0">Select subject area</option>
-								<option value="10">Subject 1</option>
-								<option value="20">Subject 2</option>
-								<option value="30">Subject 3</option>
-							</select>
-							<select id="num3" class="form-control my-2">
-								<option value="0">Select sub-category</option>
-								<option value="10">Subcategory 1</option>
-								<option value="20">Subcategory 2</option>
-								<option value="30">Subcategory 3</option>
-							</select>
-							<select id="num4" class="form-control my-2">
-								<option value="0">Select language</option>
-								<option value="10">Language 1</option>
-								<option value="20">Language 2</option>
-								<option value="30">Language 3</option>
-							</select>
+							@php $counter = 1; @endphp
+							@foreach($prices as $question => $options)
+
+								<select id="num{{$counter}}" class="form-control my-2">
+									<option value="0">{{$question}}</option>
+									@foreach($options as $option)
+										<option value="{{$option->price}}">{{$option->name_en}}</option>
+									@endforeach
+								</select>
+								<hr>
+								@php $counter++ @endphp	
+							@endforeach
+								
 							<hr>
 							<h5 class="d-flex fw-bold justify-content-between">
 								<span>Estimated price:</span> 

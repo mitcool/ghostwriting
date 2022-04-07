@@ -15,4 +15,8 @@ class Invoice extends Model
 
     	return $this->hasOne('App\Models\Order','id','order_id');
     }
+
+    public function freelancer(){
+    	return $this->hasOne('App\Models\User','id','user_id');
+    }
 }
