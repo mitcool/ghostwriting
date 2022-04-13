@@ -27,7 +27,7 @@ use App\Models\FreelancerJob;
 use App\Models\FreelancerLanguage;
 use App\Models\FreelancerSubject;
 use App\Models\CalculatorPrice;
-
+use App\Models\Country;
 //constants
 use App\Constants\UserRoles;
 use App\Constants\UserMessages;
@@ -119,7 +119,9 @@ class HomeController extends Controller
 
     public function getOrder (){
         $languages = Language::all();
+        $phone_codes = Country::select('country_name_en','country_name_de','phone_code')->get();
         return view('pages.order')
+            ->with('phone_codes',$phone_codes)
             ->with('languages',$languages);
     }
 
@@ -137,12 +139,13 @@ class HomeController extends Controller
     }
 
     public function requestOrder(Request $request){
-        $input = $request->all();
-        $details = $request->except('name','phone','email','_token');
+        $input = $request->only('name','phone','email','_token','milestones');
+        $details = $request->except('name','phone','email','_token','milestones');
         $order = new Order();
         $order->status = 0;
+        $order->milestones = $input['milestones'];
         $order->email = Auth::user() ? Auth::user()->email : $input['email'];
-        $order->phone = Auth::user() ? Auth::user()->details->phone : $input['phone'];
+        $order->phone = Auth::user() ? Auth::user()->details->phone : '(+'.$input['phone_code'].') '.$input['phone'];
         $order->name = Auth::user() ? Auth::user()->name : $input['name'];
         $order->save();
         $admins = User::where('role',UserRoles::$adminRole)->get();

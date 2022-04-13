@@ -1,5 +1,6 @@
 @extends('template')
 
+@section('title') Order @endsection
 @section('css')
 <style type="text/css">
 	.order-option{
@@ -9,6 +10,12 @@
 	.order-option input,
 	.order-option textarea{
 		margin-top:20px;
+	}
+	select option:disabled{
+		color:#D0A37D !important;
+	}
+	#submit-button{
+		display: none;
 	}
 </style>
 @endsection
@@ -33,11 +40,20 @@
 						<input type="text" name="name" class="form-control my-2 user-info-input" placeholder="Name" required>
 					</div>
 					<div class="col-md-3">
-						<input type="text" name="phone" class="form-control my-2 user-info-input" placeholder="Phone" required>
-					</div>
-					<div class="col-md-6"></div>
-					<div class="col-md-6">
 						<input type="email" name="email" class="form-control my-2 user-info-input" placeholder="Email" required>
+					</div>
+					
+					<div class="col-md-6"></div>
+					<div class="col-md-2">
+						<select class="form-control my-2 user-info-input" name="phone_code" required>
+							<option selected disabled value="">Phone Code</option>
+							@foreach($phone_codes as $phone_code)
+								<option value="{{$phone_code->phone_code}}">{{$phone_code->country_name_en}} (+{{$phone_code->phone_code}})</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="col-md-4">
+						<input type="number" name="phone" class="form-control my-2 user-info-input" placeholder="Phone Number" required>
 					</div>
 					<div class="col-md-6"></div>
 				</div>
@@ -71,6 +87,12 @@
 				
 
 					<div class="col-md-6" id="submit-button">
+						<select class="form-control my-3" name="milestones" id="milestones" required>
+							<option disabled selected value="">Please select milestones</option>
+							@for ($i = 1;$i <= 5;$i++)
+								<option>{{$i}}</option>
+							@endfor
+						</select>
 						<hr>
 						<button type="submit" class="red-button">Send request</button>
 					</div>
@@ -97,6 +119,9 @@
 
 		let all_options= document.querySelectorAll('.order-option');
 		let all_inputs = document.querySelectorAll('.form-control');
+
+		document.getElementById('submit-button').style.display="block";
+		
 
 		for (let i of all_inputs) {
 			i.setAttribute('disabled',true);
@@ -221,6 +246,8 @@
 				i.removeAttribute('disabled');
 			}
 		}
+
+		document.getElementById('milestones').removeAttribute('disabled');
 	})
 </script>
 

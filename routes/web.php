@@ -140,6 +140,12 @@ Route::group(['prefix' => 'admin'], function(){
 
 	Route::get('/content/how-it-works',[AdminController::class,'showHowItWorksPanel'])->name('admin-how-it-works');
 
+	Route::get('/content/texts',[AdminController::class,'texts'])->name('admin-texts');
+
+	Route::get('/content/texts/{page}',[AdminController::class,'singlePage'])->name('edit-single-page');
+
+	Route::post('/content/texts/save',[AdminController::class,'saveText'])->name('save-text');
+
 	Route::post('/faq/edit',[AdminController::class,'editFaq'])->name('edit-faq');
 
 	Route::get('/prices',[AdminController::class,'prices'])->name('admin-prices');

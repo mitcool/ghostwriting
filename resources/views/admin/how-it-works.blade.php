@@ -2,12 +2,13 @@
 
 
 @section('content')
-<div class="container my-2">
-	<h4 class="text-center">Edit Existing FAQ</h4>
+<div class="container shadow my-2 p-3">
+	<h4 class="text-center">Edit How it work questions and answers</h4>
+	<hr>
 	<div class="row">
 		@foreach($faqs as $faq)
 			<div class="col-md-8 offset-md-2">
-				<form action="{{route('edit-faq')}}" method="post" class="shadow p-3 bg-white">
+				<form action="{{route('edit-faq')}}" method="post" class="p-3">
 					{{csrf_field()}}
 					<label class="m-0 font-weight-bold">Question(En)</label>
 					<input type="" name="question_en" class="form-control my-2" value="{{$faq->question_en}}">

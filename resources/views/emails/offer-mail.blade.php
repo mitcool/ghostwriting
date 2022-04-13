@@ -46,7 +46,8 @@ $style = [
 	'paragraph' => 'margin-top: 0; color: #1a9efc; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
 	'paragraph-sub' => 'margin-top: 0; color: black; font-size: 18px; line-height: 1.5em; text-align:center;',
 	'paragraph-center' => 'text-align: center;',
-	'paragraph-black' => 'margin-top: 0; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
+	'paragraph-black' => 'margin-top: 0; font-size: 16px; line-height: 1.1em; text-align:justify;padding:0px 35px 0px 35px;',
+	'paragraph-blue' => 'color:#1A9EFC;margin-top: 0; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
 
 	/* Buttons ------------------------------ */
 
@@ -57,7 +58,10 @@ $style = [
 	'button--green' => 'background-color: #22BC66;',
 	'button--red' => 'background-color: #dc4d2f;',
 	'button--blue' => 'background-color: #3869D4;',
-	'pin-span' => 'font-weight:bold;font-size:22px;'
+	'pin-span' => 'font-weight:bold;font-size:22px;',
+	'link-blue' => 'display:inline-block;background-color: #1a9efc;color: white;font-weight: bold;border-radius: 30px;border:none;outline:none;padding:10px 20px;text-decoration:none;margin:0 auto;',
+	'link-red' => 'display:inline-block;background-color: #F84162;color: white;font-weight: bold;border-radius: 30px;border:none;outline:none;padding:10px 20px;text-decoration:none;margin:0 auto;',
+	'capital_letter' => 'font-weight: bold;text-transform: capitalize;',
 ];
 $fontFamily = 'font-family: Arial, \'Helvetica Neue\', Helvetica, sans-serif;';
 $fontFamily1 = "font-family:'Montserrat', sans-serif;";
@@ -86,32 +90,26 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 												<td>
 													<br/>
 													<h1 style="{{ $style['header-1'] }}">
-														Dear ....,
+														Dear {{$order->name}},
 													</h1>
 													<p style="{{ $style['paragraph-black'] }}">
 														lorem ipsum
 														<br/>
 													</p>
 													<p style="{{ $style['paragraph-black'] }}">
-														Offer: {{$order->price}}
+														<span style="{{$style['capital_letter']}}">Offer</span> : &euro;{{number_format($order->price,2,'.',',')}}
 
 														<br/>
-													</p>
+													</p>												
+													@foreach($order->details as $detail)
+													<p style="{{ $style['paragraph-black'] }}"><span style="{{$style['capital_letter']}}">{{ str_replace('_',' ',$detail->key)}}</span> : {{$detail->value }}</p>
+													@endforeach
+													
 													<p style="{{ $style['paragraph-black'] }}">
-														<ul>
-															@foreach($order->details as $detail)
-															<li>{{ $detail->key}} => {{$detail->value }}</li>
-															@endforeach
-															<br/>
-
-															<a href="{{route('accept-offer',$order->id)}}">
-																<button style="height:35px; background-color: #1a9efc;color: white;font-weight: bold;border-radius: 7px;">Accept</button>
-															<a href="{{route('decline-offer',$order->id)}}">
-																<button style="height:35px;background-color: #e95c5c;color: white;font-weight: bold;border-radius: 7px;">Decline</button>
-															</a>
-														</ul>
+														<a href="{{route('accept-offer',$order->id)}}"  style="{{$style['link-blue']}}">Accept</a>
+														<a href="{{route('decline-offer',$order->id)}}" style="{{$style['link-red']}}">Decline</a>
 													</p>
-													<p style="{{ $style['paragraph-black'] }}">
+													<p style="{{ $style['paragraph-blue'] }}">
 														This email message is being sent to you automatically in connection with the processing of a project because you registered at the GHOSTWRITING.COM portal as a client, freelancer, or administrator as well as accepted the relevant terms and conditions in the course of the registration process. Please do not reply to this email. Log in to your account to carry out the appropriate actions and to use the appropriate communication options available.
 													</p>
 													<br/>

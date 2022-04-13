@@ -47,6 +47,3 @@
 @endif
 
 @endsection
-@section('cookies')
-	<x-cookies/> 
-@endsection
