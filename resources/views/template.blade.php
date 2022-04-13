@@ -1,6 +1,5 @@
 <x-head/>
 
-
 <body>
 	<x-header/>
 
@@ -9,7 +8,6 @@
 	</div>
 
 	@yield('content')
-	@yield('cookies')
 
 	<x-modals/>
 
@@ -22,4 +20,5 @@
 
 </html>
 
+<x-cookies/> 
 <x-footer/>

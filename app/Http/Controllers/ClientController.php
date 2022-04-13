@@ -74,6 +74,7 @@ class ClientController extends Controller
 		$invoice->price = $single_milestone_price;
 		$invoice->status = $status;
 		$invoice->milestone_number = $milestone_number;
+		$invoice->invoice_number = $this->setInvoiceNumber();
 		$invoice->save();
 		$this->generatePDF($invoice);
 	}
@@ -86,6 +87,18 @@ class ClientController extends Controller
         $file = $pdf->output();
 		Storage::put('public/'.$invoice->id.'.pdf', $file);
         return;
+    }
+
+    private function setInvoiceNumber(){
+    	$next_invoice = Invoice::count() == 0 ? 1 : Invoice::max('id') + 1;
+        $numlength = strlen((string)$next_invoice);
+    	$invoice_number = '01';
+       
+        for ($i = 3; $i <= (10 - $numlength); $i++) {
+            $invoice_number .= '0';
+        }
+        $invoice_number .= $next_invoice;
+    	return $invoice_number;
     }
 	
 }

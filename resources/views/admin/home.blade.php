@@ -90,6 +90,12 @@
                 CONTENT
             </div>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-texts')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Texts</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('admin-faq')}}">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Faq</span>

@@ -17,6 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->bigInteger('order_id');
             $table->double('price',10,2)->unsigned()->default(0);
+            $table->double('freelancer_payment',10,2)->nullable()->unsigned()->default(0);
             $table->tinyInteger('status');
             $table->timestamps();
         });

@@ -17,6 +17,8 @@ use App\Models\Order;
 use App\Models\Invoice;
 use App\Models\Faq;
 use App\Models\CalculatorPrice;
+use App\Models\TextEn;
+use App\Models\TextDe;
 
 use App\Constants\UserRoles;
 use App\Constants\OrderStatus;
@@ -25,6 +27,7 @@ use App\Constants\InvoiceStatus;
 use App\Mail\OfferMail;
 use App\Mail\FreelancerApprove;
 use App\Mail\FreelancerTaskEmail;
+use App\Mail\PaymentReceived;
 
 class AdminController extends Controller
 {
@@ -137,24 +140,28 @@ class AdminController extends Controller
     }
 
     public function markAsPaid(Request $request, $invoice_id){
-       
+        
         Invoice::where('id',$invoice_id)->update([
             'status' => InvoiceStatus::$paid,
             'user_id'=>$request->freelancer
         ]);
 
+        $invoice = Invoice::find($invoice_id);
         $freelancer_mail = User::find($request->freelancer)->email;
 
         try {
           Mail::to($freelancer_mail)->send(new FreelancerTaskEmail);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             info($e->getMessage());
         }
 
-
-        /// TODO :: Payment received for invoice email
-        /// ToDO :: New Task for freelancer
-        return redirect()->back()->with('success','Milestone(invoice) marked as paid successfully');
+        try {
+          Mail::to($invoice->order->email)->send(new PaymentReceived);
+        } catch (\Exception $e) {
+            info($e->getMessage());
+        }
+    
+        return redirect()->back()->with('success','Milestone marked as paid successfully');
     }
 
     public function inProgressOrders(){
@@ -169,6 +176,7 @@ class AdminController extends Controller
         return view('admin.faq')->with('faqs',$faqs);
     }
 
+    //Same DB table as FAQ just different type
     public function showHowItWorksPanel(){
         $faqs = Faq::where('type',1)->get();
         return view('admin.how-it-works')->with('faqs',$faqs);
@@ -199,6 +207,38 @@ class AdminController extends Controller
            CalculatorPrice::where('id',$ids[$i])->update(['price' => $prices[$i]]);
        }
         return redirect()->back()->with('success','Prices updated successfully');
+    }
+
+    public function texts(Request $request){
+        $pages = TextEn::select('page')->distinct()->pluck('page');
+        return view('admin.texts')->with('pages', $pages);
+    }
+
+    public function singlePage($page){
+        $texts_en = TextEn::where('page',$page)->get();
+        $texts_de = TextDe::where('page',$page)->get();
+        return view('admin.single-page')
+                    ->with('texts_de',$texts_de)
+                    ->with('texts_en',$texts_en);
+    }
+
+    public function saveText(Request $request){
+        $texts_en = $request->texts_en;
+        $texts_de = $request->texts_de;
+
+        foreach($texts_en as $id => $text){
+            TextEn::where('id',$id)->update([
+                'text' => $text               
+            ]);
+        }
+
+        foreach($texts_de as $id => $text){
+            TextDe::where('id',$id)->update([
+                'text' => $text
+            ]);
+        }
+
+        return redirect()->back()->with('success','Texts updated successfully');
     }
 
 }

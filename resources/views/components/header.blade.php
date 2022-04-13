@@ -7,34 +7,34 @@
     <div class="collapse navbar-collapse w-100 justify-content-center" id="navbarScroll">
       <ul class="navbar-nav mx-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
         <li class="nav-item">
-          <a class="nav-link header-link" href="{{route('services')}}">Services</a>
+          <a class="nav-link header-link" href="{{route('services')}}">{{$texts[0]->text}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-link" href="#">Departments</a>
+          <a class="nav-link header-link" href="#">{{$texts[1]->text}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-link" href="{{route('prices')}}">Prices</a>
+          <a class="nav-link header-link" href="{{route('prices')}}">{{$texts[2]->text}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-link" href="{{route('about')}}">About</a>
+          <a class="nav-link header-link" href="{{route('about')}}">{{$texts[3]->text}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-link" href="#">Counselor</a>
+          <a class="nav-link header-link" href="#">{{$texts[4]->text}}</a>
         </li>
       </ul>
       <div class="d-flex">
         @guest
-          <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#login_modal">Sign In</button>
+          <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#login_modal">{{$texts[8]->text}}</button>
           @if(Session::get('theme')=='freelancer')
-           <a class="btn theme-background mx-2 text-white" style="border-radius:30px;" href="{{route('freelancer-application')}}">Get Started</a>
+           <a class="btn theme-background mx-2 text-white" style="border-radius:30px;" href="{{route('freelancer-application')}}">{{$texts[5]->text}}</a>
           @else
-          <button class="btn theme-background mx-2 text-white" style="border-radius:30px;" data-bs-toggle="modal" data-bs-target="#register_modal">Get Started</button>
+          <button class="btn theme-background mx-2 text-white" style="border-radius:30px;" data-bs-toggle="modal" data-bs-target="#register_modal">{{$texts[5]->text}}</button>
           @endif
         @else
           <a style="border-radius:30px;" class="btn theme-background mx-2 text-white" href="{{route('dashboard')}}">Dashboard</a>
           <form action="{{route('logout')}}" method="POST">
               {{csrf_field()}}
-              <button class="btn">Logout</button>
+              <button class="btn">{{$texts[7]->text}}</button>
           </form>
         @endguest
 
