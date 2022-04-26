@@ -36,6 +36,7 @@
 								</select>
 								<hr class="hr" style="display: none;">
 							@endforeach
+							<select class="form-control my-2 d-none" id="factor"><option value="0">factor</option><option value="1">Economics</option><option value="2">Law</option><option value="3">Social Sciences</option><option value="4">Humanities</option><option value="1">Structural Sciences</option><option value="4">Cultural Sciences</option><option value="5">Languages & Cultures</option><option value="6">Engineering</option><option value="7">Agricultural & Natural Sciences</option><option value="8">Medicine</option></select>
 							<div id="calculator_holder">
 								
 							</div>
@@ -74,6 +75,7 @@
 			
 			$('#1').on('change',function(){ //question
 				if($(this).val()==1){  //literature research
+					document.getElementById("factor").classList.add('d-none');
 					$( "#price" ).remove();
 					$( "#input_calc" ).remove();
 					for(let c = 2; c<=9 ; c++){
@@ -86,6 +88,7 @@
 					document.getElementById(a).classList.remove('d-none');
 				}
 				else if($(this).val()==2){ //topic of proposal
+					document.getElementById("factor").classList.remove('d-none');
 					$( "#price" ).remove();
 					$( "#input_calc" ).remove();
 					let a = 3;
@@ -98,6 +101,7 @@
 					document.getElementById(a).classList.remove('d-none');
 				}
 				else if($(this).val()==3){ //outline
+					document.getElementById("factor").classList.remove('d-none');
 					$( "#price" ).remove();
 					$( "#input_calc" ).remove();
 					let a = 4;
@@ -111,6 +115,7 @@
 					document.getElementById("input_calc").classList.add('d-none');
 				}
 				else if($(this).val()==4){ //expose
+					document.getElementById("factor").classList.remove('d-none');
 					$( "#price" ).remove();
 					$( "#input_calc" ).remove();
 					let a = 5;
@@ -124,6 +129,7 @@
 					document.getElementById("input_calc").classList.add('d-none');
 				}
 				else if($(this).val()==5){ //Theses & papers
+					document.getElementById("factor").classList.remove('d-none');
 					$( "#price" ).remove();
 					$( "#input_calc" ).remove();
 					let a = 6;
@@ -136,6 +142,7 @@
 					document.getElementById(a).classList.remove('d-none');
 				}
 				else if($(this).val()==6){  //Other text types
+					document.getElementById("factor").classList.remove('d-none');
 					$( "#price" ).remove();
 					let a = 7;
 					for(let b = 2; b<=9 ; b++){
@@ -147,6 +154,7 @@
 					document.getElementById(a).classList.remove('d-none');
 				}
 				else if($(this).val()==7){ //Editorial work
+					document.getElementById("factor").classList.add('d-none');
 					$( "#price" ).remove();
 					let a = 8;
 					for(let b = 2; b<=9 ; b++){
@@ -158,6 +166,7 @@
 					document.getElementById(a).classList.remove('d-none');
 				}
 				else if($(this).val()==8){ //Additional services
+					document.getElementById("factor").classList.add('d-none');
 					$( "#price" ).remove();
 					let a = 9;
 					for(let b = 2; b<=9 ; b++){
@@ -167,6 +176,18 @@
 						$('#'+ c).prop('selectedIndex',0);
 					}
 					document.getElementById(a).classList.remove('d-none');
+				}
+			});
+			$('#factor').on('change',function(){
+				if($(this).val()==2  || $(this).val()==8 || $(this).val()==9){
+					let price = $('#price').val();
+					let factor_price = price * 2;
+					alert($('#price').val());
+					$( "#price" ).remove();
+					$( ".price" ).append('<span id="price" value="'+price+'">'+factor_price+'</span>');
+				}
+				else{
+					document.getElementById("input_calc").classList.add('d-none');
 				}
 			});
 			$('#2').on('change',function(){ //Literature research
@@ -186,17 +207,17 @@
 				if($(this).val()==1){
 					$( "#price" ).remove();
 					let price = 200;
-					$( ".price" ).append('<span id="price">'+ price +'</span>');
+					$( ".price" ).append('<span id="price" value="'+price+'">'+price+'</span>');
 				}
 				else if($(this).val()==2){
 					$( "#price" ).remove();
 					let price = 300;
-					$( ".price" ).append('<span id="price">'+ price +'</span>');
+					$( ".price" ).append('<span id="price" value="'+price+'">'+price+'</span>');
 				}
 				else if($(this).val()==3){
 					$( "#price" ).remove();
 					let price = 400;
-					$( ".price" ).append('<span id="price">'+ price +'</span>');
+					$( ".price" ).append('<span id="price" value="'+price+'">'+price+'</span>');
 				}
 				else{
 					document.getElementById("input_calc").classList.add('d-none');
@@ -318,7 +339,7 @@
 			});
 									}
 			});
-					$('#7').on('change',function(){ //Outline 
+					$('#7').on('change',function(){ //other text types
 				if($(this).val()==1){
 					$( "#price" ).remove();
 					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
@@ -432,7 +453,7 @@
 					document.getElementById("input_calc").classList.add('d-none');
 				}
 			});
-			$('#8').on('change',function(){ //Outline 
+			$('#8').on('change',function(){ //editorial work
 				if($(this).val()==1){
 				$( "#price" ).remove();
 					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
@@ -445,12 +466,12 @@
 						}
 						else if($('#input_calc').val()<=100 && $('#input_calc').val()>=21){
 							$( "#price" ).remove();
-						let price = $(this).val() * 180;
+						let price = $(this).val() * 6;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
 						}
 						else{
 							$( "#price" ).remove();
-						let price = $(this).val() * 150;
+						let price = $(this).val() * 8;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
 						}
 						
@@ -462,27 +483,27 @@
 					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
 					document.getElementById("input_calc").classList.remove('d-none');
 					$('#input_calc').on('keyup',function(){
-						if($('#input_calc').val()<=20){
 							$( "#price" ).remove();
-						let price = $(this).val() * 300;
+						let price = $(this).val() * 20;
+						$( ".price" ).append('<span id="price">'+ price +'</span>');
+						
+			});
+							}
+				else if($(this).val()==3){
+				$( "#price" ).remove();
+					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
+					document.getElementById("input_calc").classList.remove('d-none');
+					$('#input_calc').on('keyup',function(){
+						if($('#input_calc').val()<=100){
+							$( "#price" ).remove();
+						let price = $(this).val() * 50;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
 						}
 						else{
 							$( "#price" ).remove();
-						let price = $(this).val() * 250;
+						let price = $(this).val() * 60;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
 						}
-						
-			});
-				}
-				else if($(this).val()==3){
-					$( "#price" ).remove();
-					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
-					document.getElementById("input_calc").classList.remove('d-none');
-					$('#input_calc').on('keyup',function(){
-							$( "#price" ).remove();
-						let price = $(this).val() * 150;
-						$( ".price" ).append('<span id="price">'+ price +'</span>');
 						
 			});
 				}
@@ -491,21 +512,9 @@
 					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
 					document.getElementById("input_calc").classList.remove('d-none');
 					$('#input_calc').on('keyup',function(){
-						if($('#input_calc').val()<=20){
 							$( "#price" ).remove();
-						let price = $(this).val() * 200;
+						let price = $(this).val() * 4;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
-						}
-						else if($('#input_calc').val()<=100 && $('#input_calc').val()>=21){
-							$( "#price" ).remove();
-						let price = $(this).val() * 180;
-						$( ".price" ).append('<span id="price">'+ price +'</span>');
-						}
-						else{
-							$( "#price" ).remove();
-						let price = $(this).val() * 150;
-						$( ".price" ).append('<span id="price">'+ price +'</span>');
-						}
 						
 			});
 				}
@@ -514,16 +523,9 @@
 					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
 					document.getElementById("input_calc").classList.remove('d-none');
 					$('#input_calc').on('keyup',function(){
-						if($('#input_calc').val()<=20){
 							$( "#price" ).remove();
-						let price = $(this).val() * 120;
+						let price = $(this).val() * 10;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
-						}
-						else{
-							$( "#price" ).remove();
-						let price = $(this).val() * 110;
-						$( ".price" ).append('<span id="price">'+ price +'</span>');
-						}
 						
 			});
 				}
@@ -533,7 +535,7 @@
 					document.getElementById("input_calc").classList.remove('d-none');
 					$('#input_calc').on('keyup',function(){
 							$( "#price" ).remove();
-						let price = $(this).val() * 25;
+						let price = $(this).val() * 1;
 						$( ".price" ).append('<span id="price">'+ price +'</span>');
 						
 			});
@@ -541,8 +543,44 @@
 				else{
 					document.getElementById("input_calc").classList.add('d-none');
 				}
-	
-			
+	});
+			$('#9').on('change',function(){ //additional services
+				if($(this).val()==1){
+					$( "#price" ).remove();
+					let price = 800;
+					$( ".price" ).append('<span id="price">'+ price +'</span>');
+				}
+				else if($(this).val()==2){
+					$( "#price" ).remove();
+					let price = 500;
+					$( ".price" ).append('<span id="price">'+ price +'</span>');
+				}
+				else if($(this).val()==3){
+					$( "#price" ).remove();
+					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
+					document.getElementById("input_calc").classList.remove('d-none');
+					$('#input_calc').on('keyup',function(){
+							$( "#price" ).remove();
+						let price = $(this).val() * 50;
+						$( ".price" ).append('<span id="price">'+ price +'</span>');
+						
+			});
+				}
+				else if($(this).val()==4){
+					$( "#price" ).remove();
+					$("#calculator_holder").append('<input id="input_calc" class="form-control d-none" type="number" name="num" min="1" max="100">');
+					document.getElementById("input_calc").classList.remove('d-none');
+					$('#input_calc').on('keyup',function(){
+							$( "#price" ).remove();
+						let price = $(this).val() * 95;
+						$( ".price" ).append('<span id="price">'+ price +'</span>');
+						
+			});
+				}
+				else{
+					document.getElementById("input_calc").classList.add('d-none');
+				}
+				});
 			
 	</script>
 	
