@@ -10,7 +10,7 @@
           <a class="nav-link header-link" href="{{route('services')}}">{{$texts[0]->text}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-link" href="#">{{$texts[1]->text}}</a>
+          <a class="nav-link header-link" href="{{route('disciplines')}}">{{$texts[1]->text}}</a>
         </li>
         <li class="nav-item">
           <a class="nav-link header-link" href="{{route('prices')}}">{{$texts[2]->text}}</a>
@@ -19,7 +19,7 @@
           <a class="nav-link header-link" href="{{route('about')}}">{{$texts[3]->text}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-link" href="#">{{$texts[4]->text}}</a>
+          <a class="nav-link header-link" href="{{route('tutorial')}}">{{$texts[4]->text}}</a>
         </li>
       </ul>
       <div class="d-flex">

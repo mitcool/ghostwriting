@@ -15,6 +15,8 @@ class AddDescriptionToServicesTable extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table->text('description');
+            $table->text('description_de');
+            $table->text('name_en');
             $table->string('slug');
         });
     }

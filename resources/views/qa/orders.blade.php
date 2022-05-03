@@ -6,8 +6,8 @@
 	<h2 class="text-center">Orders in progress</h2>
 	<hr>
 	
-	@foreach($invoices as $invoice)
-		<h4 class="my-2 font-italic">Order № / Invoice №</h4>
+	@forelse($invoices as $invoice)
+		<h4 class="my-2 font-italic">Order№ {{$invoice->order->id}} / Invoice№ {{$invoice->invoice_number}}</h4>
 		<div class="row py-2 bg-dark text-white">
 			<div class="col-md-4">Client Email</div>
 			<div class="col-md-4">Freelancer</div>
@@ -55,7 +55,13 @@
 	 		
 	 	</div>
 	 	<hr>	
-	@endforeach
+	@empty
+		<div class="text-center">
+			<h4 class="my-2 font-italic">No projects for QA check at the moment</h4>
+			<hr>
+			<img src="{{asset('images/admin/sad.png')}}" class="w-50">
+		</div>
+	@endforelse
 </div>
 
 @endsection

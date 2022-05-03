@@ -17,12 +17,17 @@
 @endsection
 
 @section('page-content')
-
-	@foreach($invoices as $invoice)
-		<div class="container-fluid shadow p-0">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<h3 class="m-0 py-2">Current Projects</h3>
+		</div>
+	</div>
+	@forelse($invoices as $invoice)
+		<div class="container-fluid shadow my-2 p-0">
+			
 			<div class="row border">
 				<div class="col-md-6">Order Number</div>
-				<div class="col-md-6">{{$invoice->id}}</div>
+				<div class="col-md-6">{{$invoice->invoice_number}}</div>
 			</div>
 			<div class="row border">
 				<div class="col-md-6">Milestone Number</div>
@@ -48,6 +53,9 @@
 			</div>
 			</form>
 		</div><br>
-		
-	@endforeach
+	@empty
+		<div class="container-fluid shadow my-2 p-0">
+			<h1>No projects at the moment</h1>
+		</div>
+	@endforelse
 @endsection

@@ -10,3 +10,7 @@
    ☐ QA Approve and send back to client (status 5)
 
  # Milestone == Invoice
+
+ # Services and disciplines has the same logic in AdminController functions and the same view structure
+
+ # You can find the order process graphic in documentation folder order_process.docx

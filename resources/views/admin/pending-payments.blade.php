@@ -4,25 +4,34 @@
 @section('content')
 
 <div class="container" >
-	@foreach ($orders as $order)
+	@forelse ($orders as $order)
 	<div class="shadow" style="margin-top:20px;padding:30px;">
-		<div class="row bg-dark text-white py-2">
-			<div class="col-md-4">Email</div>
-			<div class="col-md-4">Name</div>
-			<div class="col-md-4">Phone</div>
+		<h2 class="text-center">Order № {{$order->id}}</h2>
+		<hr>
+		<div class="col-md-12"> 
+			<h4 class="text-center">User Details</h4> 
 		</div>
-		<div class="row py-2 bg-white">
+		<div class="row py-2">
+			<div class="col-md-4 font-weight-bold">Email</div>
 			<div class="col-md-4">{{$order->email}}</div>
+		</div>
+		<div class="row  py-2">
+			<div class="col-md-4 font-weight-bold">Name</div>
 			<div class="col-md-4">{{$order->name}}</div>
+		</div>
+		<div class="row  py-2">
+			<div class="col-md-4 font-weight-bold">Phone</div>
 			<div class="col-md-4">{{$order->phone}}</div>
 		</div>
 		<div class="row py-2">
-			<div class="col-md-12"> Order Details</div>
+			<div class="col-md-12"> 
+				<h4 class="text-center">Order Details</h4> 
+			</div>
 		</div>	
 			@foreach ($order->details as $detail)
-				<div class="row bg-white">
-					<div class="col-md-4 py-2 font-weight-bold" style="text-transform: capitalize;">{{$detail->key}}</div>
-					<div class="col-md-4 py-2">{{$detail->value}}</div>
+				<div class="row py-2">
+					<div class="col-md-4 font-weight-bold" style="text-transform: capitalize;">{{$detail->key}}</div>
+					<div class="col-md-4">{{$detail->value}}</div>
 					<div class="col-md-4"></div>
 				</div>	
 			@endforeach
@@ -34,7 +43,9 @@
 				</h5>
 				<hr>
 			</div>
-				
+			<div class="col-md-12"> 
+				<h4 class="text-center">Milestones</h4> 
+			</div>	
 			@foreach($order->invoices as $invoice)
 				@if($invoice->status == 0)
 					<form action="{{route('mark-as-paid',$invoice->id)}}" method="POST">
@@ -53,7 +64,7 @@
 							Price(for client) : &euro;{{number_format($invoice->price,2,',','.')}}
 						</div>
 						<div class="col-6 py-2">
-							Payment(for freelancer)
+							<input type="number" name="freelancer_payment" placeholder="Payment(for freelancer)" class="form-control"  required/>
 						</div>
 						<div class="col-6 py-2">
 							<select class="form-control" name="freelancer" required>
@@ -63,18 +74,34 @@
 								@endforeach
 							</select>
 						</div>
-						<div class="col py-2">
+						<div class="col-6 py-2">
+							<select class="form-control" name="qa_id" required>
+								<option selected disabled value="">Select QA</option>
+								@foreach($qas as $qa)
+									<option value="{{$qa->id}}">{{$qa->name.' '.$qa->surname}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="col-6"></div>
+						<div class="col text-center py-2">
 							<button class="red-button">Mark as paid</button>	
 						</div>
 					</div>
 					<hr/>
 					</form>
 				@endif
+
 			@endforeach
 		</div>
 		<hr style="border-bottom:3px solid grey;">
 	</div>
-	@endforeach
+	@empty
+		<div class="shadow text-center" style="margin-top:20px;padding:30px;">
+			<h3>No orders at the moment</h3>
+			<hr>	
+			<img src="{{asset('images/admin/sad.png')}}" class="w-50">
+		</div>
+	@endforelse
 </div>
 
 

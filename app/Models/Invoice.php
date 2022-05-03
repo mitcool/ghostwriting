@@ -19,4 +19,8 @@ class Invoice extends Model
     public function freelancer(){
     	return $this->hasOne('App\Models\User','id','user_id');
     }
+
+    public function qa(){
+    	return $this->hasOne('App\Models\User','id','qa_id');
+    }
 }

@@ -82,6 +82,8 @@ class AuthController extends Controller
             return;
         }
         User::where('confirmation_code',$code)->update(['role'=>UserRoles::$clientRole]);
+        $user = User::where('confirmation_code',$code)->first();
+        $this->insertNotification('Welcome to ghostwriting.com',$user->id);
         return redirect()->route('welcome')->with('success','Welcome to ghostwriting.com');
     }
 

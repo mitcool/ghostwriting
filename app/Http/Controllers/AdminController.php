@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 use Mail;
+use Auth;
 
 use App\Models\User;
 use App\Models\News;
@@ -19,6 +20,11 @@ use App\Models\Faq;
 use App\Models\CalculatorPrice;
 use App\Models\TextEn;
 use App\Models\TextDe;
+use App\Models\Service;
+use App\Models\CompanyDetail;
+use App\Models\Discipline;
+use App\Models\Tutorial;
+use App\Models\Notification;
 
 use App\Constants\UserRoles;
 use App\Constants\OrderStatus;
@@ -32,12 +38,12 @@ use App\Mail\PaymentReceived;
 class AdminController extends Controller
 {
     public function admin(){
-
-    	return view('admin.home');
+        $notifications = Notification::where('user_id',Auth::id())->orderBy('created_at','desc')->get();
+    	return view('admin.welcome')
+            ->with('notifications',$notifications);
     }
 
     public function addNews(){
-
     	return view('admin.news');
     }
 
@@ -101,7 +107,7 @@ class AdminController extends Controller
         FreelancerSubject::where('user_id',$freelancer_id)->delete();
         FreelancerLanguage::where('user_id',$freelancer_id)->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Freelancer deleted from the system');
     }
 
     public function orders(){
@@ -113,55 +119,82 @@ class AdminController extends Controller
     }
 
     public function sendOffer(Request $request,$order_id){
-        $input = $request->only('offer','milestones');
+        $input = $request->only('offer','milestones','email_content');
         Order::where('id',$order_id)->update([
             'price'=>$input['offer'],
             'milestones' => $input['milestones'],
             'status' => OrderStatus::$offer
         ]);
         $order = Order::with('details')->find($order_id); 
+        $order->email_content = $input['email_content'];
         try {
             Mail::to($order->email)->send(new OfferMail($order));
         } catch (\Exception $e) {
             info($e->getMessage());
         }
+        if(User::where('email',$order->email)->count() > 0){
+            $user = User::where('email',$order->email)->first();
+            $this->insertNotification('Dear '.$user->name.' we have an offer for your request. Please check your email',$user->id);
+        }
         return redirect()->back()->with('success','Offer sent successfully');
     }
+
     public function pendingPayments(){
         $freelancers = User::where('role',UserRoles::$freelancerRole)->get();
+        $qas =  User::where('role',UserRoles::$qaRole)->get();
         $orders = Order::with('details')
                         ->with('invoices')
                         ->where('status',OrderStatus::$accepted)
                         ->orderBy('created_at','desc')
                         ->get();
         return view('admin.pending-payments')
+                ->with('qas',$qas)
                 ->with('freelancers',$freelancers)
                 ->with('orders',$orders);
     }
 
     public function markAsPaid(Request $request, $invoice_id){
-        
+        $invoice = Invoice::find($invoice_id);
+
         Invoice::where('id',$invoice_id)->update([
             'status' => InvoiceStatus::$paid,
-            'user_id'=>$request->freelancer
+            'user_id'=>$request->freelancer,
+            'freelancer_payment' => $request->freelancer_payment,
+            'qa_id' => $request->qa_id
         ]);
 
-        $invoice = Invoice::find($invoice_id);
+        $related_order = Order::find($invoice->order->id);
+
+        $this->checkIfAllMilestonesArePaid($related_order->id);
+
         $freelancer_mail = User::find($request->freelancer)->email;
 
         try {
-          Mail::to($freelancer_mail)->send(new FreelancerTaskEmail);
+          Mail::to($freelancer_mail)->send(new FreelancerTaskEmail($invoice));
         } catch (\Exception $e) {
             info($e->getMessage());
         }
 
         try {
-          Mail::to($invoice->order->email)->send(new PaymentReceived);
+          Mail::to($invoice->order->email)->send(new PaymentReceived($invoice));
         } catch (\Exception $e) {
             info($e->getMessage());
         }
     
         return redirect()->back()->with('success','Milestone marked as paid successfully');
+    }
+
+    private function checkIfAllMilestonesArePaid($related_order_id){
+        $order = Order::find($related_order_id);
+        $is_order_paid = 1;
+        foreach($order->invoices as $invoice){
+            if($invoice->status == InvoiceStatus::$pending){
+                $is_order_paid = 0;
+            }
+        }
+        if($is_order_paid == 1){
+            Order::where('id',$order->id)->update(['status'=>OrderStatus::$paid]);
+        }
     }
 
     public function inProgressOrders(){
@@ -217,7 +250,13 @@ class AdminController extends Controller
     public function singlePage($page){
         $texts_en = TextEn::where('page',$page)->get();
         $texts_de = TextDe::where('page',$page)->get();
+        $services = null;
+        if($page == 'services'){
+            $services = Service::all();
+        }
         return view('admin.single-page')
+                    ->with('services',$services)
+                    ->with('page',$page)
                     ->with('texts_de',$texts_de)
                     ->with('texts_en',$texts_en);
     }
@@ -241,4 +280,158 @@ class AdminController extends Controller
         return redirect()->back()->with('success','Texts updated successfully');
     }
 
+    public function saveService(Request $request){
+        $names = $request->names;
+        $names_de = $request->names_de;
+        $descriptions = $request->descriptions;
+        $descriptions_de = $request->descriptions_de;
+
+
+        for ($i=1; $i <= count($names); $i++) { 
+            Service::where('id',$i)->update([
+                "name" => $names[$i],
+                "name_de" =>$names_de[$i],
+                "description" => $descriptions[$i],
+                "description_de" => $descriptions_de[$i],
+                'slug' => Str::slug($names[$i])
+            ]);
+        }
+
+        return redirect()->back()->with('success','Services updated successfully');
+    }
+
+    public function companyDetails(){
+        $company_details = CompanyDetail::find(1);
+        return view('admin.company-details')
+                ->with('company_details',$company_details);
+    }
+
+    public function companyDetailsSave(Request $request){
+
+        CompanyDetail::where('id',1)->update([
+            "name" => $request->name,
+            "address" => $request->address,
+            "company_phone" => $request->company_phone,
+            "contact_phone" => $request->contact_phone,
+            "zip" => $request->zip,
+            "city" => $request->city,
+            "country" => $request->country,
+        ]);
+
+         return redirect()->back()->with('success','Details saved successfully');
+    }
+
+    public function disciplines(){
+        $disciplines = Discipline::all();
+        $services = Service::all();
+        return view('admin.disciplines')
+                ->with('services', $services)
+                ->with('disciplines', $disciplines);
+    }
+
+
+
+    public function editDisciplines($type,$resource_id){
+        if($type=='discipline'){
+             $resource = Discipline::find($resource_id);
+        }
+        else{
+            $resource = Service::find($resource_id);
+        }
+        
+        return view('admin.single-service-discipline')
+                ->with('type',$type)
+                ->with('resource',$resource);        
+    }
+
+    public function editDiscipline(Request $request,$resource_id){
+        if($request->type=='discipline'){
+            Discipline::where('id',$resource_id)->update([
+                'name' => $request->name,
+                'name_de' => $request->name_de,
+                'description' => $request->description,
+                'description_de' => $request->description_de,
+                'slug' => Str::slug($request->name)
+            ]);
+        }
+        else{
+            Service::where('id',$resource_id)->update([
+                'name' => $request->name,
+                'name_de' => $request->name_de,
+                'description' => $request->description,
+                'description_de' => $request->description_de,
+                'slug' => Str::slug($request->name)
+            ]);
+        }
+
+        return redirect()->back()->with('success',$request->type. ' updated successfully');
+    }
+
+    public function editServices($service_id){
+        $resource = Service::find($service_id);
+        return view('admin.single-service-discipline')
+        ->with('resource',$resource);
+    }
+
+    public function deleteDiscipline(Request $request,$discipline_id){
+        if($request->type=='discipline'){
+            Discipline::find($discipline_id)->delete();
+        }
+        else{
+            Service::find($discipline_id)->delete();
+        }
+       
+        return redirect()->route('admin-disciplines')->with('success','Discipline deleted successfully');
+    }
+
+    public function addDiscipline($type){
+        return view('admin.add-discipline-service')
+                    ->with('type',$type);
+    }
+
+    public function addDisciplineService(Request $request){
+
+        if($request->type == 'discipline'){
+            Discipline::insert([               
+                'name' => $request->name,
+                'name_de' => $request->name_de,
+                'description' => $request->description,
+                'description_de' => $request->description_de,
+                'slug' => Str::slug($request->name)
+            ]);
+        }
+        else{
+            Service::insert([
+                'name' => $request->name,
+                'name_de' => $request->name_de,
+                'description' => $request->description,
+                'description_de' => $request->description_de,
+                'slug' => Str::slug($request->name)
+            ]);
+        }
+        return redirect()->route('admin-disciplines')->with('success','Discipline deleted successfully');
+    }
+
+    public function tutorials(){
+        $tutorials = Tutorial::all();
+        return view('admin.tutorials')
+                ->with('tutorials',$tutorials);
+    }
+
+    public function deleteTutorial($tutorial_id){
+        $tutorial_image = public_path('tutorial-images').'/'.Tutorial::find($tutorial_id)->thumbnail;
+        $this->unlinkFile($tutorial_image);
+        Tutorial::find($tutorial_id)->delete();
+        return redirect()->back()->with('success','Tutorial deleted successfully');
+    }
+
+    public function addTutorial(Request $request){
+        $thumbnail = $this->uploadFile($request->file('thumbnail'),'/public/tutorial-images');
+        Tutorial::insert([
+            'thumbnail'=>$thumbnail,
+            'video' => $request->video
+        ]);
+
+        return redirect()->back()->with('success','Tutorial updated successfully');
+    }
 }

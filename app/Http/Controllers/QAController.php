@@ -30,6 +30,7 @@ class QAController extends Controller
     }
 
     public function approveWork(Request $request){
+
         $invoice_id = $request->invoice_id;
         $invoice = Invoice::with('freelancer')->find($invoice_id);
         $admins = User::where('role',UserRoles::$adminRole)->get();
@@ -40,7 +41,7 @@ class QAController extends Controller
         //Admin mail
         foreach($admins as $admin){
             try {
-                Mail::to($admin->email)->send(new OrderCompletedAdmin);
+                Mail::to($admin->email)->send(new OrderCompletedAdmin($invoice));
             } catch (\Exception $e) {
                 info($e->getMessage());
             }
@@ -48,14 +49,14 @@ class QAController extends Controller
 
         //Client mail
         try {
-            Mail::to($invoice->order->email)->send(new OrderCompletedClient);
+            Mail::to($invoice->order->email)->send(new OrderCompletedClient($invoice));
         } catch (\Exception $e) {
             info($e->getMessage());
         }
 
         //Freelancer mail
         try {
-            Mail::to($invoice->freelancer->email)->send(new OrderCompletedFreelancer);
+            Mail::to($invoice->freelancer->email)->send(new OrderCompletedFreelancer($invoice));
         } catch (\Exception $e) {
             info($e->getMessage());
         }

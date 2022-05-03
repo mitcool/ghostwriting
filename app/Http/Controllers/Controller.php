@@ -9,10 +9,14 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
 
 use App\Constants\UserRoles;
+
 use Hash;
+use Session;
 
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\TextDe;
+use App\Models\TextEn;
 
 class Controller extends BaseController
 {
@@ -44,6 +48,13 @@ class Controller extends BaseController
         $notification->save();
     }
 
+    public function notifyAdmins($message){
+        $admins = User::select('id')->where('role',UserRoles::$adminRole)->get();
+        foreach($admins as $admin){
+            $this->insertNotification($message,$admin->id);
+        }
+    }
+
     public function createUser(array $data)
     {
       return User::create([
@@ -55,5 +66,15 @@ class Controller extends BaseController
         'confirmation_code' => Str::random(30)
       ]);
     } 
+
+
+    public function getTexts($page){
+
+        $texts = Session::get('locale')=='de'
+            ? TextDe::where('page',$page)->get()
+            : TextEn::where('page',$page)->get();
+
+        return $texts;
+    }
 
 }

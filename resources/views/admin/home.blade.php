@@ -13,7 +13,7 @@
     <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{{asset('css/common.css')}}">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     @yield('css')
 
 </head>
@@ -29,7 +29,8 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{{route('admin')}}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Dashboard</span>
+                </a>
             </li>
 
             <hr class="sidebar-divider">
@@ -44,9 +45,11 @@
                     <span>News</span>
                 </a>
             </li>
-
-            <hr class="sidebar-divider d-none d-md-block">
-            <li class="nav-item">
+             <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                USERS
+            </div>           
+             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('freelancer-list')}}">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Freelancer</span>
@@ -96,6 +99,18 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-disciplines')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Disciplines & Services</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-tutorials')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('admin-faq')}}">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Faq</span>
@@ -107,12 +122,35 @@
                     <span>How It Works</span>
                 </a>
             </li>
+            <hr class="sidebar-divider">
+            
+            <div class="sidebar-heading">
+                OTHER
+            </div>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('admin-company-details')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Company Details</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <form action="{{route('logout')}}" method='POST' id="logout_form">
+                    {{csrf_field()}}
+                    <button class="nav-link collapsed bg-transparent border-0" href="{{route('logout')}}">
+                        <i class="fas fa-fw fa-wrench"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </li>
         </ul>
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <div class="container-fluid">
-                    <x-flash-messages/>
+                    <div class="my-2">
+                        <x-flash-messages/>
+                    </div>
                     @yield('content')
                 </div>
             </div>
@@ -123,11 +161,25 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
     @yield('scripts')
+
+    <script type="text/javascript">
+       let forms = document.querySelectorAll('form');
+       for(let form of forms){
+        
+        form.addEventListener('submit',function(e){
+            if(form.getAttribute('id')=='logout_form'){
+                form.submit();
+            }
+            else{
+                e.preventDefault();
+                if(confirm('Are you sure?')){
+                    form.submit();
+                };
+            }    
+        });
+       }
+    </script>
 </body>
 
 </html>

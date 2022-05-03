@@ -28,6 +28,8 @@ use App\Models\FreelancerLanguage;
 use App\Models\FreelancerSubject;
 use App\Models\CalculatorPrice;
 use App\Models\Country;
+use App\Models\Discipline;
+use App\Models\Tutorial;
 //constants
 use App\Constants\UserRoles;
 use App\Constants\UserMessages;
@@ -61,8 +63,10 @@ class HomeController extends Controller
     } 
 
     public function getServices(){
+        $texts = $this->getTexts('services');
         $services = Service::all();
         return view('pages.services')
+            ->with('texts', $texts)
             ->with('services',$services);
     }
 
@@ -74,6 +78,30 @@ class HomeController extends Controller
             ->with('service',$service);
     }
 
+    public function getDisciplines(){
+        $texts = $this->getTexts('disciplines');
+        $disciplines = Discipline::all();
+        return view('pages.disciplines')
+            ->with('texts', $texts)
+            ->with('disciplines',$disciplines);
+    }
+
+    public function getDiscipline($discipline_slug){
+        $discipline = Discipline::where('slug',$discipline_slug)->first();
+        $disciplines = Discipline::all();
+        return view('pages.discipline')
+            ->with('disciplines',$disciplines)
+            ->with('discipline',$discipline);
+    }
+
+    public function getTutorials(){
+        $texts = $this->getTexts('tutorials');
+        $tutorials = Tutorial::all();
+        return view('pages.tutorials')
+                ->with('texts',$texts)
+                ->with('tutorials',$tutorials);
+    }
+
     public function getFaq(){
         $faqs = Faq::where('type',0)->get();
         return view('pages.faqs')
@@ -81,26 +109,33 @@ class HomeController extends Controller
     }
 
     public function getAbout(){
-        return view('pages.about');
+        $texts = $this->getTexts('about');
+        return view('pages.about')
+            ->with('texts',$texts);
     }
 
     public function getPrices(){
         $prices = CalculatorPrice::get()->groupBy('question');
-        
         return view('pages.prices')
-                            ->with('prices',$prices);
+                 ->with('prices',$prices);
     }
 
     public function getAgb(){
-        return view('pages.agb');
+        $texts = $this->getTexts('agb');
+        return view('pages.agb')
+                 ->with('texts',$texts);
     }
 
     public function getDataProtection(){
-        return view('pages.data-protection');
+        $texts = $this->getTexts('data-protection');
+        return view('pages.data-protection')
+                 ->with('texts',$texts);
     }
 
     public function getImprint(){
-        return view('pages.imprint');
+        $texts = $this->getTexts('imprint');
+        return view('pages.imprint')
+                ->with('texts', $texts);
     }
 
     public function getBlog(){
@@ -139,8 +174,8 @@ class HomeController extends Controller
     }
 
     public function requestOrder(Request $request){
-        $input = $request->only('name','phone','email','_token','milestones');
-        $details = $request->except('name','phone','email','_token','milestones');
+        $input = $request->only('name','phone','phone_code','email','_token','milestones');
+        $details = $request->except('name','phone','phone_code','email','_token','milestones');
         $order = new Order();
         $order->status = 0;
         $order->milestones = $input['milestones'];
@@ -162,6 +197,8 @@ class HomeController extends Controller
             $detail->save();
         }
         $order_with_details = Order::with('details')->where('id',$order_id)->first();
+        $admin_message = 'We have a new request from '.$order->email.' . Please check Requested Orders section';
+        $this->notifyAdmins($admin_message);
 
         foreach ($admins as $admin) {
            try {

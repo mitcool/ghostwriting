@@ -4,7 +4,8 @@
   <div class="modal-dialog">
     <div class="modal-content theme-border" style="border-radius:30px;border:none;">
       <div class="modal-body" style="position: relative;">
-        <div class="text-center"><i class="fa-solid fa-phone"></i> +41 44 5868130</div>
+        {{-- Contact Phone is coming from appServiceProvider --}}
+        <div class="text-center"><i class="fa-solid fa-phone"></i> {{$contact_phone}}</div>
         <button style="position: absolute;right:10px;top:15px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
     </div>

@@ -11,13 +11,15 @@ class OrderCompletedAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct()
+    public $invoice;
+    public function __construct($invoice)
     {
-        //
+        $this->invoice = $invoice;
     }
 
     public function build()
     {
-        return $this->view('emails.order-completed-admin');
+        return $this->view('emails.order-completed-admin')
+        				->with('invoice', $this->invoice);
     }
 }

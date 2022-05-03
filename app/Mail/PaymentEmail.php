@@ -28,7 +28,6 @@ class PaymentEmail extends Mailable
             ->with(['order'=>$this->order]);
 
         foreach ($this->order->invoices as $invoice) {
-            info(storage_path('public'));
             $email->attach(storage_path('app\public').'\\'.$invoice->id.'.pdf');
         }
 

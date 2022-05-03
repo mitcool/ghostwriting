@@ -4,49 +4,59 @@
 @section('content')
 
 <div class="container shadow" style="margin-top:20px;padding:30px;">
-	<h2 class="p-3 text-center">List with all in progress milestones </h2>
-	<div class="row bg-dark text-white">
-		<div class="col-2 py-2">
-			Invoice №
-		</div>
-		<div class="col-3 py-2">
-			Freelancer
-		</div>
-		<div class="col-2 py-2">
-			Created On
-		</div>
-		<div class="col-2 py-2">
-			Price
-		</div>
-		<div class="col-2 py-2">
-			Client
-		</div>
-		<div class="col-1 py-2 text-center">
-			
-		</div>
-	</div>
-	@foreach ($invoices as $invoice)
-		<div class="row border">
-			<div class="col-2 py-2">
+	@forelse ($invoices as $invoice)
+		<div class="row bg-white">
+			<div class="col-12 bg-light p-2 border text-center">
+				<h3 class="m-0">Order №{{$invoice->order->id}}</h3>
+			</div>
+			<div class="col-6 border py-2 font-weight-bold">
+				Invoice №
+			</div>
+			<div class="col-6 border py-2">
 				{{$invoice->invoice_number}}
 			</div>
-			<div class="col-3 py-2">
+			<div class="col-6 border py-2 font-weight-bold">
+				Freelancer
+			</div>
+			<div class="col-6 border py-2">
 				{{$invoice->freelancer->email}}
 			</div>
-			<div class="col-2 py-2">
-				{{$invoice->created_at->format('d-m-Y')}}
+			<div class="col-6 border py-2 font-weight-bold">
+				QA
 			</div>
-			<div class="col-2 py-2">
-				&euro;{{number_format($invoice->price,2,',','.')}}
+			<div class="col-6 border py-2">
+				{{$invoice->qa->email}}
 			</div>
-			<div class="col-2 py-2">
+			<div class="col-6 border py-2 font-weight-bold">
+				Client
+			</div>
+			<div class="col-6 border py-2">
 				{{$invoice->order->email}}
 			</div>
-			<div class="col-1 py-2 text-center">
-				<a href="{{asset('storage')}}\{{$invoice->id}}.pdf" download><i class="fa-solid fa-download"></i></a>
+			<div class="col-6 border py-2 font-weight-bold">
+				Price(client)
+			</div>
+			<div class="col-6 border py-2">
+				&euro;{{number_format($invoice->price,2,',','.')}}
+			</div>
+			<div class="col-6 border py-2 font-weight-bold">
+				Freelancer(payment)
+			</div>
+			<div class="col-6 border py-2">
+				&euro;{{number_format($invoice->freelancer_payment,2,',','.')}}
+			</div>
+			<div class="col-6 py-2 border">
+				<a href="{{asset('storage')}}\{{$invoice->id}}.pdf" download>Download Invoice <i class="fa-solid fa-download"></i></a>
 			</div>
 		</div>
-	@endforeach
+		
+	@empty 
+	    <div class="text-center" style="margin-top:20px;padding:30px;">
+			<h3>No orders at the moment</h3>
+			<hr>	
+			<img src="{{asset('images/admin/sad.png')}}" class="w-50">
+		</div>
+	@endforelse
 </div>
 
 

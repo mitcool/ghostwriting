@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\QAController;
+use App\Http\Controllers\SandboxController;
 
 
 Route::get('/change-language/{lang}',[HomeController::class,'changeLanguage'])->name('change-language');
@@ -20,9 +21,15 @@ Route::get('/services', [HomeController::class,'getServices'])->name('services')
 
 Route::get('/service/{slug}',[HomeController::class,'getService'])->name('service');
 
+Route::get('/disciplines', [HomeController::class,'getDisciplines'])->name('disciplines');
+
+Route::get('/discipline/{slug}',[HomeController::class,'getDiscipline'])->name('discipline');
+
 Route::get('/faq',[HomeController::class,'getFaq'])->name('faq');
 
 Route::get('/about',[HomeController::class,'getAbout'])->name('about');
+
+Route::get('/tutorials',[HomeController::class,'getTutorials'])->name('tutorial');
 
 Route::get('/prices',[HomeController::class,'getPrices'])->name('prices');
 
@@ -61,7 +68,7 @@ Route::post('/contact-mail',[HomeController::class,'sendContactMail'])->name('co
 Route::post('/request-order',[HomeController::class,'requestOrder'])->name('request-order');
 
 //Freelancer
-Route::group(['prefix' => 'freelancer'], function(){
+Route::group(['prefix' => 'freelancer','middleware'=>'freelancer'], function(){
 
 	Route::get('/offers',[FreelancerController::class,'offers'])->name('freelancer-offers');
 
@@ -76,7 +83,7 @@ Route::group(['prefix' => 'freelancer'], function(){
 });
 
 // Client
-Route::group(['prefix'=>'client'],function(){
+Route::group(['prefix'=>'client','middleware'=>'client'],function(){
 
 	Route::get('/messages',[ClientController::class,'messages'])->name('client-messages');
 
@@ -86,7 +93,7 @@ Route::group(['prefix'=>'client'],function(){
 });
 
 // QA 
-Route::group(['prefix'=>'qa'],function(){
+Route::group(['prefix'=>'qa','middleware'=>'qa'],function(){
 
 	Route::get('/home',[QAController::class,'home'])->name('qa');
 
@@ -101,7 +108,6 @@ Route::group(['prefix'=>'qa'],function(){
 Route::post('/change-details',[HomeController::class,'changeDetails'])->name('change-details');
 
 // Authentication
-
 Route::post('/login',[AuthController::class,'login'])->name('login');
 
 Route::post('/register',[AuthController::class,'register'])->name('register');
@@ -111,10 +117,9 @@ Route::get('/dashboard',[AuthController::class,'dashboard'])->name('dashboard');
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
 
 // Admin routes
+Route::group(['prefix' => 'admin','middleware'=>'admin'], function(){
 
-Route::get('/admin',[AdminController::class,'admin'])->name('admin');
-
-Route::group(['prefix' => 'admin'], function(){
+	Route::get('/',[AdminController::class,'admin'])->name('admin');
 
 	Route::get('/news/add',[AdminController::class,'addNews'])->name('add-news');
 
@@ -152,6 +157,34 @@ Route::group(['prefix' => 'admin'], function(){
 
 	Route::post('/prices/update',[AdminController::class,'updatePrices'])->name('change-prices');
 
+	Route::post('/services/save',[AdminController::class,'saveService'])->name('save-service');
+
+	Route::get('/company/details',[AdminController::class,'companyDetails'])->name('admin-company-details');
+
+	Route::post('/company/details/save',[AdminController::class,'companyDetailsSave'])->name('save-company-details');
+
+	// All Services + Discipline (same logic just different db tables)
+	Route::get('/disciplines',[AdminController::class,'disciplines'])->name('admin-disciplines');
+
+	Route::get('/edit/{type}/{discipline_id}',[AdminController::class,'editDisciplines'])->name('edit-single-resource');
+
+	Route::post('/disciplines/edit/{discipline_id}',[AdminController::class,'editDiscipline'])->name('edit-disciplines');
+	Route::post('/discipline/delete/{discipline_id}',[AdminController::class,'deleteDiscipline'])->name('delete-discipline');
+
+	Route::get('/disciplines/add/{type}',[AdminController::class,'addDiscipline'])->name('add-resource');
+
+	Route::post('/discipline/add',[AdminController::class,'addDisciplineService'])->name('add-discipline-service');
+
+	Route::get('/tutorials',[AdminController::class,'tutorials'])->name('admin-tutorials');
+
+	Route::post('/tutorials/delete/{tutorial_id}',[AdminController::class,'deleteTutorial'])->name('delete-tutorial');
+
+	Route::post('/tutorials/add',[AdminController::class,'addTutorial'])->name('add-tutorial');
+
 });
 
 
+
+Route::get('/test-invoice',[ClientController::class,'generatePDF']);
+
+Route::get('/test',[SandboxController::class,'test']);

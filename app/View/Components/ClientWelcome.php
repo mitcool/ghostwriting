@@ -3,26 +3,24 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
+use Session;
+use App\Models\TextDe;
+use App\Models\TextEn;
 
 class ClientWelcome extends Component
 {
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
+
+    public $texts;
     public function __construct()
     {
-        //
+         $this->texts = Session::get('locale')=='de' 
+            ? TextDe::where('page','client-welcome')->get() 
+            : TextEn::where('page','client-welcome')->get();
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
     public function render()
     {
-        return view('components.client-welcome');
+        return view('components.client-welcome')
+                ->with('texts',$this->texts);
     }
 }

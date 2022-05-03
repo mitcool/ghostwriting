@@ -1,7 +1,7 @@
 @extends('admin.home')
 
 @section('css')
-	<script src="https://cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
+	<script type="text/javascript" src="{{asset('ckeditor/ckeditor.js')}}"></script>
 	<style type="text/css">
 		label{
 			margin-top:10px;
@@ -22,7 +22,7 @@
 			<label class="d-block font-weight-bold">Description (En)</label>
 			<textarea class="form-control" name="description_en" rows="10"></textarea>
 			<label class="d-block font-weight-bold">Content (En)</label>
-			<textarea class="form-control" name="content_en"></textarea>
+			<textarea class="form-control ckeditor" name="content_en"></textarea>
 		</div>
 		<div class="col-md-6">
 			<label class="d-block font-weight-bold">Title (De)</label>
@@ -30,7 +30,7 @@
 			<label class="d-block font-weight-bold">Description (De)</label>
 			<textarea class="form-control" name="description_de" rows="10"></textarea>
 			<label class="d-block font-weight-bold">Content (De)</label>
-			<textarea class="form-control" name="content_de"></textarea>
+			<textarea class="form-control ckeditor" name="content_de"></textarea>
 		</div>
 		<div class="col-md-12">
 			<hr>
@@ -47,7 +47,25 @@
 
 @section('scripts')
   <script>
-        CKEDITOR.replace( 'content_en' );
-        CKEDITOR.replace( 'content_de' );
+        $('.ckeditor').each(function(){
+
+			CKEDITOR.replace( this,{ toolbar :[
+
+				{ name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Save', 'NewPage', 'Preview', 'Print', '-',] },
+				{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+				{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: ['SelectAll', '-', 'Scayt' ] },
+				{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
+				'/',
+				{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote','-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+				{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+				{ name: 'insert', items: [ 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'] },
+				'/',
+				{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+				{ name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+				{ name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+		
+			]});
+
+		})
     </script>
 @endsection

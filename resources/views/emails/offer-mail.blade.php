@@ -44,7 +44,7 @@ $style = [
 	'anchor' => 'color: #3869D4;padding:0px 35px 0px 35px;',
 	'header-1' => 'margin-top: 0; color: black; font-size: 21px; font-weight: bold; text-align: left;padding:35px 35px 0px 35px;',
 	'paragraph' => 'margin-top: 0; color: #1a9efc; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
-	'paragraph-sub' => 'margin-top: 0; color: black; font-size: 18px; line-height: 1.5em; text-align:center;',
+	'paragraph-sub' => 'margin-top: 0; color: black; font-size: 18px; line-height: 1.5em; text-align:center;color:white;',
 	'paragraph-center' => 'text-align: center;',
 	'paragraph-black' => 'margin-top: 0; font-size: 16px; line-height: 1.1em; text-align:justify;padding:0px 35px 0px 35px;',
 	'paragraph-blue' => 'color:#1A9EFC;margin-top: 0; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
@@ -54,7 +54,7 @@ $style = [
 	'button' => 'display: block; display: inline-block; width: 320px; min-height: 20px; padding: 10px;
 	background-color: #1a9efc; border-radius: 30px; color: #ffffff; font-size: 15px; line-height: 25px;
 	text-align: center; text-decoration: none; -webkit-text-size-adjust: none; font-weight: 550;',
-
+	'text-center' => 'text-align:center;',
 	'button--green' => 'background-color: #22BC66;',
 	'button--red' => 'background-color: #dc4d2f;',
 	'button--blue' => 'background-color: #3869D4;',
@@ -75,7 +75,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 					<tr>
 						<td style="{{ $style['email-masthead'] }}">
 							<a style="{{ $fontFamily }} {{ $style['email-masthead_name'] }}" href="{{ url('/') }}" target="_blank">
-								<img style="height:50px;" width="200" src="{{asset('images/thumbnail.png')}}" alt="" />
+								<img style="height:50px;" height="50" src="{{asset('images/thumbnail.png')}}" alt="" />
 							</a>
 						</td>
 					</tr>
@@ -92,23 +92,20 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 													<h1 style="{{ $style['header-1'] }}">
 														Dear {{$order->name}},
 													</h1>
-													<p style="{{ $style['paragraph-black'] }}">
-														lorem ipsum
-														<br/>
-													</p>
-													<p style="{{ $style['paragraph-black'] }}">
-														<span style="{{$style['capital_letter']}}">Offer</span> : &euro;{{number_format($order->price,2,'.',',')}}
+													<div style="{{ $style['paragraph-black'] }}">
+														{!!$order->email_content!!}
+													</div>	
 
-														<br/>
-													</p>												
-													@foreach($order->details as $detail)
+													{{-- If we decide to show order detail in future  --}}
+													{{-- @foreach($order->details as $detail)
 													<p style="{{ $style['paragraph-black'] }}"><span style="{{$style['capital_letter']}}">{{ str_replace('_',' ',$detail->key)}}</span> : {{$detail->value }}</p>
-													@endforeach
+													@endforeach --}}
 													
-													<p style="{{ $style['paragraph-black'] }}">
+													<div style="{{ $style['paragraph-black'].$style['text-center'] }}">
 														<a href="{{route('accept-offer',$order->id)}}"  style="{{$style['link-blue']}}">Accept</a>
 														<a href="{{route('decline-offer',$order->id)}}" style="{{$style['link-red']}}">Decline</a>
-													</p>
+													</div>
+													<hr>
 													<p style="{{ $style['paragraph-blue'] }}">
 														This email message is being sent to you automatically in connection with the processing of a project because you registered at the GHOSTWRITING.COM portal as a client, freelancer, or administrator as well as accepted the relevant terms and conditions in the course of the registration process. Please do not reply to this email. Log in to your account to carry out the appropriate actions and to use the appropriate communication options available.
 													</p>
