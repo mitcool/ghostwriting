@@ -85,8 +85,11 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 											<tr>
 												<td>
 													<br/>
-													<a href="{{route('verify-account',[$code])}}">Verify Account</a>
+													<a  style="display:flex;height: 50px;width: 400px;font-size: 19px;text-decoration: none;" href="{{route('verify-account',[$code])}}">
+													    <input style="cursor:pointer;border-radius: 30px;height: 50px;width: 400px;font-size: 21px;margin-left: 110px; background-color:#1a9efc;color: white; " type="submit" value="Verify Account"/>
+													</a>
 														<br/>
+														
 													<p style="{{ $style['paragraph-black'] }}">
 														lorem ipsum
 														<br/>
