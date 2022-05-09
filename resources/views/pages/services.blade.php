@@ -52,7 +52,7 @@
 		}
 
 		/* fixed side social buttons */
-		#mySidenav button {
+		#mySidenav div {
 		  position: absolute; /* Position them relative to the browser window */
 		  left: -60px; /* Position them outside of the screen */
 		  transition: 0.3s; /* Add transition on hover */
@@ -65,11 +65,10 @@
 		  margin-top: 15rem;
 		  position: fixed;
 		  z-index: 1;
+		  border:1px solid #a8d8fb;
 		}
 
-		#mySidenav button:hover {
-		  left: 0; /* On mouse-over, make the elements appear as they should */
-		}
+		
 		#about {
 		  top: 20px;
 		  background-color: #fafafa;
@@ -81,6 +80,15 @@
 		}
 		.arrrow{
 			padding: 0.5rem 2.6rem !important;
+		}
+		.fa-facebook-f:before{
+			margin-left: 5px;
+		}
+		.fa-twitter:before{
+			margin-left: 4px;
+		}
+		.fa-instagram:before{
+			margin-left:4px;
 		}
 	}
 
@@ -100,7 +108,7 @@
 				</div>
 
 				<div class="col-md-8">
-					<p class="title">{{$texts[0]->text}}</p><br>
+					<p class="title">text</p><br>
 					<hr class="title_hr">
 					<div class="row">
 						@foreach($services as $service)
@@ -119,7 +127,7 @@
 			 <div class="row mt-5">
 				<div class="col-md-10 offset-md-1">
 			    	<hr class="title_hr">
-					<div>{!! $texts[1]->text !!}</div>
+					<div>text</div>
 				</div>
 			</div>
 		</div>
@@ -127,5 +135,25 @@
 	</div>
 	
 </div>
+<script type="text/javascript">
+	let t = 1;
+	function rotate() {
+
+  if(t == 1){
+  	
+      t = 0;
+      document.getElementById("rotate").style = "transform:rotate(180deg); transition: transform 0.3s;";
+      document.getElementById("about").style = "left:0;";
+  }
+  else{
+      t = 1;
+      document.getElementById("rotate").style = "transform:rotate(0deg); transition: transform 0.3s;";
+      document.getElementById("about").style = "left:-61px;";
+  }
+  
+}
+
+	
+</script>
 
 @endsection

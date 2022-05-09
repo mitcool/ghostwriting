@@ -64,7 +64,7 @@
 	</ul>
 </div>
 <div id="mySidenav" class="sidenav hidden-xs hidden-sm mobile-sidenav" onclick="" style="display: none;">
-  <button id="about">
+  <div id="about">
   	<ul class="list-group">
 	  <li class="list-group-item mt-2 border-0 bg-transparent">
 	  	<span class="theme-border theme-radius bg-white" style="width:50px;height: 50px;padding: 10px;" data-bs-target="#phone_modal" data-bs-toggle="modal">
@@ -106,9 +106,9 @@
 	  </li>
 	  @endif
 
-	  <li class="list-group-item mt-2 border-0 bg-transparent arrrow" id="arrow">
+	  <li onclick="rotate()" class="list-group-item mt-2 border-0 bg-transparent arrrow" id="arrow">
 	  	<span class="theme-border theme-radius bg-white" style="width:50px;height: 50px;padding: 10px;" data-bs-toggle="modal">
-	  		<i class="fa-solid fa-angle-right"></i>
+	  		<i id="rotate" class="fa-solid fa-angle-right"></i>
 	  	</span>
 	  </li>
 	  
@@ -134,5 +134,5 @@
 	  	</a>
 	  </li>
 	</ul>
-  </button>
+  </div>
 </div>
