@@ -23,10 +23,16 @@
       <div class="modal-body">
        <form action="{{route('register')}}" method="POST">
             {{csrf_field()}}
-              <input type="text" name="name"  class="form-control my-2" placeholder="Name...">
-              <input type="text" name="surname"  class="form-control my-2" placeholder="Surname...">
-              <input type="email" name="email" class="form-control my-2" placeholder="Email...">
-              <input type="password" name="password" class="form-control my-2" placeholder="Password...">
+              <input type="text" name="name"  class="form-control my-2" placeholder="Name..." value="{{old('name')}}">
+              <input type="text" name="surname"  class="form-control my-2" placeholder="Surname..." value="{{old('surname')}}">
+              <input type="email" name="email" class="form-control my-2" placeholder="Email..." value="{{old('email')}}">
+              <div class="input-group my-2">
+                <input type="password" name="password" style="border-right:none;" class="form-control" placeholder="Password...">
+                <span class="input-group-text bg-white" style="border-left:none;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$password_requirements}}">
+                    <i class="fa-solid fa-circle-info text-primary"></i>
+                </span>
+              </div>
+             
               <input type="password" name="confirm_password" class="form-control my-2" placeholder="Confirm password...">
               <hr>
               <div class="d-flex justify-content-center">
@@ -55,9 +61,9 @@
       <div class="modal-body">
         <form method="POST" action="{{route('contact-mail')}}">
             {{csrf_field()}}
-            <input type="text" name="name" placeholder="Name & surname" class="form-control my-2 bg-light" required>
-            <input type="email" name="email" placeholder="Email" class="form-control my-2 bg-light" required>
-            <textarea name="message" rows="10" placeholder="Message up to 2000 characters" class="form-control my-2 bg-light" required></textarea>
+            <input type="text" value="{{old('name')}}" name="name" placeholder="Name & surname" class="form-control my-2 bg-light" required>
+            <input type="email" value="{{old('email')}}" name="email" placeholder="Email" class="form-control my-2 bg-light" required>
+            <textarea name="message" rows="10" placeholder="Message up to 2000 characters" class="form-control my-2 bg-light" required>{{old('message')}}</textarea>
             <hr>
             <div class="d-flex justify-content-center">
               @if(config('services.recaptcha.key'))
@@ -83,9 +89,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <form action="{{route('login')}}" method="POST">
+          <span class="text-danger" id="login_error"></span>
+          <form action="{{route('login')}}" method="POST" id="login_form">
             {{csrf_field()}}
-              <input type="email" name="email" class="form-control my-2" placeholder="Email...">
+              <input type="email" name="email" id="email" class="form-control my-2" placeholder="Email..." value="{{old('email')}}">
               <input type="password" name="password" class="form-control my-2" placeholder="Password...">
               <hr>
               <div class="d-flex justify-content-center">
@@ -94,11 +101,18 @@
                 @endif
               </div>
               <hr>
+              <input type="pin" name="pin" id="pin" class="form-control my-2" style="display: none;" placeholder="Enter code..." required>
               <div class="d-flex justify-content-center">
-                <button class="red-button">Log in</button>
+                <button class="red-button" type="button" id="check_ip">Log in</button>
+                <button class="red-button" style="display: none;" type="button" id="check_pin">Log in</button>
               </div>
           </form>
+          <hr> 
+          <div class="d-flex justify-content-center">
+                <a href="{{route('forgot-password')}}">Forgot Passoword</a>
+          </div>
       </div>
     </div>
   </div>
 </div>
+

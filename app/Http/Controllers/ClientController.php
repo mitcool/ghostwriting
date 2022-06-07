@@ -47,13 +47,16 @@ class ClientController extends Controller
 	}
 
 	public function acceptOffer($order_id){
-		$order = Order::with('invoices')->with('details')->find($order_id);
+		$order = Order::with('invoices')->with('details')->find($order_id) ?? abort(404);
+		if($order->status != OrderStatus::$offer){
+			return redirect()->route('welcome')->with('success','You already approve or decline the offer');
+		}
 		$single_milestone_price = $order->price/$order->milestones;
 		for ($i=1; $i <= $order->milestones; $i++) { 
 			$this->createInvoice($single_milestone_price,$order_id,InvoiceStatus::$pending,$i);
 		}
 		
-		Order::where('id',$order_id)->update(['status' => OrderStatus::$accepted]);
+		Order::where('id',$order_id)->update(['status' => OrderStatus::$accepted_by_client]);
 		$this->notifyAdmins('Order '.$order->id.' was accepted from client. Please check Pending Payments section for more details');
 
 		try {
@@ -61,12 +64,14 @@ class ClientController extends Controller
 		} catch (\Exception $e) {
 			info($e->getMessage());
 		}
-
 		return redirect()->route('welcome')->with('success',UserMessages::$order_placed);
 	}
 
 	public function declineOffer($order_id){
 		$order = Order::find($order_id) ?? abort(404);
+		if($order->status != OrderStatus::$offer){
+			return redirect()->route('welcome')->with('success','You already approve or decline the offer');
+		}
 		$this->notifyAdmins(UserMessages::orderDeclined($order->name,$order->id));
 		Order::where('id',$order_id)->delete();
 		OrderDetail::where('order_id',$order_id)->delete();
@@ -84,14 +89,12 @@ class ClientController extends Controller
 		$this->generatePDF($invoice);
 	}
 
-	public function generatePDF()   // 
+	public function generatePDF($invoice)   // 
     {
-   		$invoice = Invoice::find(29);
    		$invoice->contractor = CompanyDetail::find(1);
         $pdf = PDF::loadView('pages.invoice', ['invoice'=>$invoice]);
-        $file = $pdf->output();
-		return $pdf->stream('public/'.$invoice->id.'.pdf', $file);
-        // return;
+       	Storage::put('public/'.$invoice->invoice_number.'.pdf', $pdf->output());
+		return $pdf->download($invoice->id.'.pdf');       
     }
 
     private function setInvoiceNumber(){

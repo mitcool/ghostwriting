@@ -4,19 +4,31 @@
 @section('css')
 <style type="text/css">
 	.order-option{
-		display: none;
+		display: none;	
 	}
 	.order-option select,
 	.order-option input,
 	.order-option textarea{
 		margin-top:20px;
+
 	}
 	select option:disabled{
 		color:#D0A37D !important;
+
 	}
 	#submit-button{
 		display: none;
 	}
+	#order_form select,
+	#order_form textarea,
+	#order_form input{	
+		padding:10px 15px;
+		outline: none;
+	}
+	.form-control:focus {
+			box-shadow: none;
+	}
+
 </style>
 @endsection
 
@@ -30,8 +42,8 @@
 
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt ligula purus, id blandit tortor pharetra laoreet. Quisque risus sem, vestibulum eu leo a, gravida commodo metus. Nam quis odio et leo fermentum ullamcorper et in enim. Aliquam consequat eget quam et dignissim. Duis quis rutrum odio. Phasellus at viverra nisi, a ullamcorper ex. Sed vehicula lobortis tortor. </p>
 			<p>Curabitur luctus lacus vitae diam dignissim dignissim Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sem lorem, interdum vitae nulla id, rhoncus tincidunt nisl. Aenean purus nisi, fringilla consequat mi nec, fringilla rhoncus metus. Suspendisse potenti. Proin quis ultricies diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam est libero, convallis in turpis non, aliquam porta risus. Ut lacinia ullamcorper sollicitudin.</p>
-
-			<form style="min-height: 500px;" method="POST" action="{{route('request-order')}}">
+			<hr>
+			<form style="min-height: 500px;" method="POST" action="{{route('request-order')}}" id="order_form">
 			{{csrf_field()}}
 				@guest
 				<h4 style="margin-top:40px;">How can we reach you?</h4>
@@ -121,7 +133,7 @@
 		let all_inputs = document.querySelectorAll('.form-control');
 
 		document.getElementById('submit-button').style.display="block";
-		
+		$('.number').attr('placeholder','Please indicate number of pages');
 
 		for (let i of all_inputs) {
 			i.setAttribute('disabled',true);
@@ -145,6 +157,7 @@
 			for (let i of literature_inputs) {
 				i.removeAttribute('disabled');
 			}
+			$('.number').attr('placeholder','Please indicate number of sources');
 		}
 		if(this.value == 'Topic Proposal' || this.value == 'Outline'){
 			let options = document.querySelectorAll('.topic');
@@ -221,7 +234,7 @@
 			for (let i of user_inputs) {
 				i.removeAttribute('disabled');
 			}
-
+			$('.number').css('display', 'none');
 			let literature_inputs = document.querySelectorAll('.additional .form-control');
 			document.getElementById('main_category').removeAttribute('disabled');
 			for (let i of literature_inputs) {
@@ -229,6 +242,9 @@
 			}
 		}
 		if(this.value == 'Other text types'){
+
+			$('.number').css('display', 'none');
+			$("#other_type_of_service").css('display', 'none');
 
 			let options = document.querySelectorAll('.other');
 			for(let option of  options){
@@ -248,6 +264,103 @@
 		}
 
 		document.getElementById('milestones').removeAttribute('disabled');
+
+		$('#editoral_subcategory').on('change',function(){
+			let value = $(this).val();
+			if(value=='Formatting' || value=='Plagiarism assessment'){
+				$('.topic-input').css('display','none');
+			}
+			else{
+				$('.topic-input').css('display','block')
+			}
+			if(value=='Plagiarism assessment'){
+				$('#type_of_service').css('display','none');
+				$('.number').css('display','none');
+			}
+			else{
+				$('#type_of_service').css('display','block');
+				$('.number').css('display','block');
+			}
+			if(value=='Transcriptions'){
+				$('.number').attr('placeholder','Please indicate the number of minutes')
+			}
+			else if(value=='Statistics'){
+				$('.number').attr('placeholder','Please indicate the number of hours')
+			}
+			else{
+				$('.number').attr('placeholder','Please indicate the number of pages')
+			}
+
+		});
+
+		$('#academic_subcategory').on('change',function(){
+			let value = $(this).val();
+			if(value == 'Solution sketch (law)'){
+				$('.subject').css('display','none');
+			}
+			else{
+				$('.subject').css('display','block')
+			}
+
+		});
+
+		$('#additional_subcategory').on('change',function(){
+			let value = $(this).val();
+			if(value!='Statitics' || value!='Translation'){
+				$('.number').css('display','none');
+			}
+			if(value == 'Statitics'){
+				$('.number').attr('placeholder','Please indicate the number of hours');
+				$('.number').css('display','block');		
+			}
+			else{
+				$('.number').attr('placeholder','Please indicate the number of pages');
+				$('.number').css('display','block');
+			}
+		});
+
+		$('#other_subcategory').on('change',function(){
+			$("#other_type_of_service").css('display', 'none');	
+			$('.number').attr('placeholder','Please indicate the number of pages');
+			$('.number').css('display','block');
+
+			let value = $(this).val();
+
+			if(value == 'Presentation including PowerPoint slides'){
+				$('.number').attr('placeholder','Please indicate the number of minutes');
+				$('.number').css('display','block');
+				$("#other_type_of_service").css('display', 'block');	
+			}
+
+			if(value == 'Corporate book, Business plan'){
+				$("#other_type_of_service").css('display', 'block');
+				$('.subject').css('display', 'none');	
+			}
+
+			if(value == 'Development of quantitative interview' || value == 'Development of qualitative interview'){
+				$("#other_type_of_service").css('display', 'block');
+				$('.subject').css('display', 'block');
+				$('.number').attr('placeholder','Please indicate the number of questions');
+			}
+			if(value == 'Review'){
+				$("#other_type_of_service").css('display', 'block');
+				$('.subject').css('display', 'block');
+				$('.number').attr('placeholder','Please indicate the number of pages');
+			}
+			if(value == 'Letter of application/CV'){
+				$("#other_type_of_service").css('display', 'none');
+				$('.subject').css('display', 'none');
+				$('.number').css('display', 'none');
+				$('.topic').css('display', 'none');
+			}
+		});
+
+
+		// $('#order_form').on('submit',function(e){
+		// 	 e.preventDefault();
+		// 	 alert('works')
+
+		// });
 	})
 </script>
 

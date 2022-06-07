@@ -21,6 +21,7 @@ class OrderCompletedClient extends Mailable
     public function build()
     {
         return $this->view('emails.order-completed-client')
-        		->with('invoice', $this->invoice);
+        	->with('invoice', $this->invoice)
+            ->attach(storage_path('app\public').'\\'.$this->invoice->invoice_number.'.pdf');
     }
 }

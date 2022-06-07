@@ -46,7 +46,15 @@
 	.form-control:focus{
 		outline:none !important;
 		box-shadow: none !important;
-}
+	}
+	#form_wrapper form textarea,
+	#form_wrapper form input{
+		color:#000000 !important;
+	}
+	#form_wrapper form textarea::placeholder,
+	#form_wrapper form input::placeholder {
+		color:#A9A9A9 !important;
+	}
 </style>
 
 @endsection
@@ -70,38 +78,43 @@
 			</div>
 		</div>
 		<div class="col-md-4">
-			<img class="w-100 theme-border theme-radius" src="{{asset('images/lady.png')}}">
+			<img class="w-100 theme-border theme-radius" src="{{asset('images/freelancer-home.png')}}">
 		</div>
 		<div class="col-md-1"></div>
 	</div>
 
-	<div class="row">
+	<div class="row" style="margin-top:50px;">
 		<div class="col-md-1"></div>
-		<div class="col-md-7">
+		<div class="col-md-7" id="form_wrapper">
 			<h2>Apply as a freelancer</h2>
 			<form class="row shadow p-2" method="POST" action="{{route('freelancer-apply')}}" enctype="multipart/form-data" id="application_form">
 				{{csrf_field()}}
 				<div class="col-md-12 my-2">
-					<input type="text" class="form-control" name="name" placeholder="Enter name">
+					<input type="text" class="form-control" name="name" placeholder="Enter name" value="{{old('name')}}">
 					<span class="validation-span" id="name_validation"></span>
 				</div>
 				<div class="col-md-12 my-2">
-					<input type="text" class="form-control" name="surname" placeholder="Enter surname">
+					<input type="text" class="form-control" name="surname" placeholder="Enter surname" value="{{old('surname')}}">
 					<span class="validation-span" id="surname_validation"></span>
 				</div>
 				<div class="col-md-12 my-2">
-					<input type="text" name="email" email class="form-control" placeholder="Email"> 
+					<input type="text" name="email" email class="form-control" placeholder="Email" value="{{old('email')}}"> 
 					<span class="validation-span" id="email_validation"></span>
 				</div>
 				<div class="col-md-6 my-2">
-					<input type="password" name="password" class="form-control" placeholder="Password">
+					 <div class="input-group">
+		                <input type="password" name="password" style="border-right:none;" class="form-control" placeholder="Password...">
+		                <span class="input-group-text bg-white" style="border-left:none;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$password_requirements}}">
+		                    <i class="fa-solid fa-circle-info text-primary"></i>
+		                </span>
+		              </div>
 					<span class="validation-span" id="password_validation"></span>
 				</div>
 				<div class="col-md-6 my-2">
 					<input type="password" name="re_password" class="form-control" placeholder="Repeat password">
 				</div>
 				<div class="col-md-12 my-2">
-					<textarea name="message"  rows="5" class="form-control" placeholder="Enter your message"></textarea>
+					<textarea name="message"  rows="5" class="form-control" placeholder="Enter your message">{{old('message')}}</textarea>
 				</div>
 				<div class="col-md-12 my-2">
 					<hr>
@@ -171,13 +184,23 @@
 					</div>
 				</div>
 				<div class="col-md-12 my-2 text-center">
-					
-					<input type="submit" class="red-button" value="Sign up as a freelancer"/>
-				</div>	
+					 <div class="d-flex justify-content-center">
+		              @if(config('services.recaptcha.key'))
+		                  <div class="g-recaptcha" data-sitekey="{{config('services.recaptcha.key')}}"></div>
+		              @endif
+		            </div>
+		            <hr>
+					<button type="submit" class="red-button text-white">Sign up as a freelancer</button>
+				</div>
 			</form>
 			<br><br>
 		</div>
-		<div class="col-md-3"></div>
+		<div class="col-md-3 p-3">
+			<div style="position: sticky;top:20px;">
+				<img src="{{asset('images/side-image.png')}}" class="w-100">
+			</div>
+			
+		</div>
 		<div class="col-md-1"></div>
 	</div>
 </div>

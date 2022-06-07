@@ -8,10 +8,14 @@ class InvoiceStatus{
 
 	public static $paid = 1;
 
-	public static $deleted = 2;
+	public static $offered_to_freelancer = 2;
 
-	public static $completed = 3; //Completed From Freelancer
+	public static $accepted_by_freelancer = 3;
 
-	public static $finished = 4; 
+	public static $appointed_qa = 4; //Completed From Freelancer
+
+	public static $completed_by_freelancer = 5; //Completed From Freelancer
+
+	public static $finished = 6;
 
 }

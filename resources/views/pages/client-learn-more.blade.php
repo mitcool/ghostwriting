@@ -24,7 +24,7 @@
 
 <img src="{{asset('images/faq.png')}}" class="w-100">
 
-<div class="container text-center" style="margin-top:50px;margin-bottom:50px;">
+<div class="container" style="margin-top:50px;margin-bottom:50px;">
 	<h1 class="text-center" style="margin:40px 0;">What you need to know about ghostwriting</h1>
 
 	@foreach($faqs as $faq)
@@ -34,8 +34,8 @@
 		  </button>
 		
 		<div class="collapse" id="answer-{{$faq->id}}">
-		  <div class="card card-body border-0">
-		    {{ Session::get('locale')=='de' ? $faq->answer_de : $faq->answer_en }}
+		  <div class="card card-body border-0 text-justify">
+		    {!! Session::get('locale')=='de' ? $faq->answer_de : $faq->answer_en !!}
 		  </div>
 		</div>
 	@endforeach

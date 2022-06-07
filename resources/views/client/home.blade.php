@@ -37,18 +37,7 @@
 					<p class="dashboard-link">{{Auth::user()->email}}</p>
 				</div>
 				<div class="col-md-6">
-					<ul class="nav justify-content-end">
-			
-					  <li class="nav-item">
-					    <a class="nav-link dashboard-link" id="messages_link" href="{{route('client-messages')}}">Messages</a>
-					  </li>
-					  <li class="nav-item">
-					    <a class="nav-link dashboard-link" id="orders_link" href="{{route('client-orders')}}">Order</a>
-					  </li>
-					  <li class="nav-item">
-					    <a class="nav-link dashboard-link" id="settings_link" href="{{route('client-settings')}}">Settings</a>
-					  </li>
-					</ul>
+					<x-client-navigation/>
 				</div>
 			</div>
 			<div class="container" style="padding:30px;">

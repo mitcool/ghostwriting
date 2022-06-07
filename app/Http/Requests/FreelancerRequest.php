@@ -18,8 +18,8 @@ class FreelancerRequest extends FormRequest
             "name" => "required|max:50",
             "surname" => "required|max:50",
             "email" => "required|email",
-            "password" => "required|min:6",
-            "re_password" => "required|same:password",
+            'password' => 'required|min:10|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
+            're_password' => 'required|same:password',
             "message" => "required",
             "jobs" =>'required',
             "subjects" => 'required',
@@ -27,6 +27,12 @@ class FreelancerRequest extends FormRequest
             "curriculum_vitae" => 'required',
             "work_samples" => 'required',
             "certificates" =>'required',
+            'g-recaptcha-response' => 'required|recaptcha',
         ];
+    }
+
+    public function messages(){
+
+        return [];
     }
 }

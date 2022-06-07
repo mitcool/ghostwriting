@@ -18,19 +18,19 @@
 		{{csrf_field()}}
 		<div class="col-md-6">
 			<label class="d-block font-weight-bold">Title (En)</label>
-			<input type="text" name="title_en" class="form-control">
+			<input type="text" name="title_en" class="form-control" value="{{old('title_en')}}">
 			<label class="d-block font-weight-bold">Description (En)</label>
-			<textarea class="form-control" name="description_en" rows="10"></textarea>
+			<textarea class="form-control" name="description_en" rows="10">{{old('description_en')}}</textarea>
 			<label class="d-block font-weight-bold">Content (En)</label>
-			<textarea class="form-control ckeditor" name="content_en"></textarea>
+			<textarea class="form-control ckeditor" name="content_en">{{old('content_en')}}</textarea>
 		</div>
 		<div class="col-md-6">
 			<label class="d-block font-weight-bold">Title (De)</label>
-			<input type="text" name="title_de" class="form-control">
+			<input type="text" name="title_de" class="form-control" value="{{old('title_de')}}">
 			<label class="d-block font-weight-bold">Description (De)</label>
-			<textarea class="form-control" name="description_de" rows="10"></textarea>
+			<textarea class="form-control" name="description_de" rows="10">{{old('description_de')}}</textarea>
 			<label class="d-block font-weight-bold">Content (De)</label>
-			<textarea class="form-control ckeditor" name="content_de"></textarea>
+			<textarea class="form-control ckeditor" name="content_de">{{old('content_de')}}</textarea>
 		</div>
 		<div class="col-md-12">
 			<hr>

@@ -39,9 +39,9 @@
         @endguest
 
         @if(Session::get('locale')=='de')
-          <a href="{{route('change-language','en')}}" class="btn theme-background mx-2 text-white" style="border-radius:30px;" type="submit">EN</a>
+          <a href="{{route('change-language','en')}}" class="btn theme-background mx-2 text-white" style="border-radius:30px;">EN</a>
         @else
-          <a href="{{route('change-language','de')}}" class="btn theme-background mx-2 text-white" style="border-radius:30px;" type="submit">DE</a>
+          <a href="{{route('change-language','de')}}" class="btn theme-background mx-2 text-white" style="border-radius:30px;">DE</a>
         @endif
 
       </div>

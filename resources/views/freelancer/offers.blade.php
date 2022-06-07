@@ -17,14 +17,12 @@
 @endsection
 
 @section('page-content')
-	<div class="row">
-		<div class="col-md-12 text-center">
-			<h3 class="m-0 py-2">Current Projects</h3>
-		</div>
-	</div>
+	<div style="min-height:30vh;">
+	<h2>My offers</h2>
+	<hr>
+	
 	@forelse($invoices as $invoice)
 		<div class="container-fluid shadow my-2 p-0">
-			
 			<div class="row border">
 				<div class="col-md-6">Order Number</div>
 				<div class="col-md-6">{{$invoice->invoice_number}}</div>
@@ -39,7 +37,29 @@
 					<div class="col-md-6">{{$detail->value}}</div>
 				</div>
 			@endforeach
-			<form action="{{route('freelancer-work-upload')}}" method="POST" enctype="multipart/form-data">
+			<div class="row border">
+				<div class="text-capitalize col-md-6">Payment</div>
+				<div class="col-md-6">&euro;{{number_format($invoice->freelancer_payment,2,',','.')}}</div>
+			</div>
+			<div class="row text-center">
+				<div class="col-md-6">
+					<form action="{{route('freelancer-accept-work')}}" method="POST">
+						{{csrf_field()}}
+						<input type="hidden" name="invoice_id" value="{{$invoice->id}}">
+						<button class="green-button">Accept</button>
+					</form>
+				</div>
+				<div class="col-md-6">
+					 <form action="{{route('freelancer-decline-work')}}" method="POST">
+						{{csrf_field()}}
+						<input type="hidden" name="invoice_id" value="{{$invoice->id}}">
+						<button class="red-button">Decline</button>
+					</form>
+				</div>
+			</div>
+			
+			
+			{{-- <form action="{{route('freelancer-work-upload')}}" method="POST" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="row border text-center">
 				<div class="col-md-6 offset-md-3">
@@ -51,11 +71,11 @@
 					<button class="red-button">Send For Quality Check</button>
 				</div>
 			</div>
-			</form>
+			</form> --}}
 		</div><br>
 	@empty
-		<div class="container-fluid shadow my-2 p-0">
-			<h1>No projects at the moment</h1>
+		<div class="container-fluid text-center shadow my-2 p-0 text">
+			<h1 class="p-3">No offers at the moment</h1>
 		</div>
 	@endforelse
 @endsection

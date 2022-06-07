@@ -79,7 +79,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 							<table style="{{ $style['email-body_inner'] }}" align="center" width="570" cellpadding="0" cellspacing="0">       
 								<tr>
 									<td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
-										<img style="width:100%;" width="600" src="{{asset('images/Someone_order.jpg')}}" alt="" />
+                                        <img src="{{ $message->embed(public_path() . '/assets/email-pictures/Admin/Someone_order.jpg') }}" width="600" alt="Image" />
 										<table align="center" width="550" cellpadding="10" cellspacing="10">
 											<tr>
 												<td>
@@ -102,7 +102,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 													@foreach($order->details as $detail)
 														<p style="{{ $style['paragraph-black'] }}"><span style="{{$style['capital_letter']}}">{{str_replace('_',' ',$detail['key'])}}</span> : {{$detail['value']}}</p>
 													@endforeach
-										
+													<p style="{{ $style['paragraph-black'] }}"><span style="{{$style['capital_letter']}}">Milestones</span> : {{$order->milestones}}</p>
 													<hr>	
 													<p style="{{ $style['paragraph-blue'] }}">
 														This email message is being sent to you automatically in connection with the processing of a project because you registered at the GHOSTWRITING.COM portal as a client, freelancer, or administrator as well as accepted the relevant terms and conditions in the course of the registration process. Please do not reply to this email. Log in to your account to carry out the appropriate actions and to use the appropriate communication options available.

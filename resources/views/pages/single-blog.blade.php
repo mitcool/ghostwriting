@@ -66,7 +66,7 @@
 			<div class="row">
 				@foreach($other_news as $on)
 					<div class="col-md-4">
-						<a href="{{route('single-blog',$on->slug_en)}}" style="color:black;text-decoration: none;">
+						<a href="{{route('single-blog',$on->slug)}}" style="color:black;text-decoration: none;">
 							<div class="shadow">
 								<div class="image-box">
 									<img src="{{asset('news')}}/{{$on->picture}}" class="w-100">

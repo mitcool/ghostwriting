@@ -15,7 +15,7 @@
 	<h2 class="text-center">Freelancers waiting approval</h2>
 
 	@foreach($not_approved_freelancers as $user) 
-		<div class="bg-white shadow p-2 my-2">
+		<div class="bg-white shadow p-3 my-2">
 			<p><span class="font-weight-bold">Name :</span> {{$user->name}}</p>
 			<p><span class="font-weight-bold">Email :</span> {{$user->email}}</p>
 			<p><span class="font-weight-bold">Message :</span> {{$user->freelancer->message}}</p>

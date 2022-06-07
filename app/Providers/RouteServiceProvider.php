@@ -26,15 +26,16 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string|null
      */
-    // protected $namespace = 'App\\Http\\Controllers';
+     protected $namespace = 'App\\Http\\Controllers';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
-     */
+    
+    public function getLocale(){
+        return $request->segment(1);
+    }
+
     public function boot()
     {
+        
         $this->configureRateLimiting();
 
         $this->routes(function () {
@@ -43,7 +44,13 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
+            Route::prefix('en')
+                ->middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
+
+             Route::prefix('de')
+                ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });

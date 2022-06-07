@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -9,51 +10,72 @@ use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\QAController;
 use App\Http\Controllers\SandboxController;
+use App\Models\CustomRoute;
 
 
-Route::get('/change-language/{lang}',[HomeController::class,'changeLanguage'])->name('change-language');
 
-Route::get('/change-theme/{type}',[HomeController::class,'changeTheme'])->name('change-theme');
 
-Route::get('/', [HomeController::class,'getHome'])->name('welcome');
+Route::get(trans('routes.home'), ['as' => 'welcome', 'uses' => 'HomeController@getHome']);
 
-Route::get('/services', [HomeController::class,'getServices'])->name('services');
+Route::get(trans('routes.about'), ['as' => 'about', 'uses' => 'HomeController@getAbout']);
 
-Route::get('/service/{slug}',[HomeController::class,'getService'])->name('service');
 
-Route::get('/disciplines', [HomeController::class,'getDisciplines'])->name('disciplines');
 
-Route::get('/discipline/{slug}',[HomeController::class,'getDiscipline'])->name('discipline');
 
-Route::get('/faq',[HomeController::class,'getFaq'])->name('faq');
 
-Route::get('/about',[HomeController::class,'getAbout'])->name('about');
 
-Route::get('/tutorials',[HomeController::class,'getTutorials'])->name('tutorial');
 
-Route::get('/prices',[HomeController::class,'getPrices'])->name('prices');
 
-Route::get('/agb',[HomeController::class,'getAgb'])->name('agb');
 
-Route::get('/data-protection',[HomeController::class,'getDataProtection'])->name('data-protection');
+// $public_routes = CustomRoute::get();
+// foreach($public_routes as $route){
+// 	Route::get($route->url_en,$route->action)->name($route->name_en);
+// }
 
-Route::get('/imprint',[HomeController::class,'getImprint'])->name('imprint');
+// Route::group(['prefix' => 'en','middleware'=>'translate'],function(){
+// 	$public_routes = CustomRoute::where('slug',0)->get();
+// 	foreach($public_routes as $route){
+// 		Route::get($route->url_en,$route->action)->name($route->name_en);
+// 	}
+// });
 
-Route::get('/blog',[HomeController::class,'getBlog'])->name('blog');
+// Route::group(['prefix' => 'de','middleware'=>'translate'],function(){
+// 	$public_routes = CustomRoute::where('slug',0)->get();
+// 	foreach($public_routes as $route){
+// 		Route::get($route->url_de,$route->action)->name($route->name_de);
+// 	}
+	
+// });
+// Route::group(['prefix' => 'en','middleware'=>'translate-slug'],function(){
+// 	$public_routes = CustomRoute::where('slug',1)->get();
+// 	foreach($public_routes as $route){
+// 		Route::get($route->url_en,$route->action)->name($route->name_en);
+// 	}
+	
+// });
 
-Route::get('/blog/{slug}',[HomeController::class,'getSingleBlog'])->name('single-blog');
+// Route::group(['prefix' => 'de','middleware'=>'translate-slug'],function(){
+// 	$public_routes = CustomRoute::where('slug',1)->get();
+// 	foreach($public_routes as $route){
+// 		Route::get($route->url_de,$route->action)->name($route->name_de);
+// 	}
+	
+// });
 
-Route::get('/order',[HomeController::class,'getOrder'])->name('order');
+
+//Public POST routes
+Route::post('/delete-notification',[Controller::class,'deleteNotifications'])->name('delete-notification');
 
 Route::post('/contact-mail',[HomeController::class,'sendContactMail'])->name('contact-mail');
 
 Route::post('/request-order',[HomeController::class,'requestOrder'])->name('request-order');
 
-Route::get('/freelancer/application',[HomeController::class,'getFreelancerApplication'])->name('freelancer-application');
-
 Route::post('/freelancer/apply',[HomeController::class,'freelancerApply'])->name('freelancer-apply');
 
-Route::get('/client/info',[HomeController::class,'learnMoreClient'])->name('learn-more-client');
+// Nofollow Urls
+Route::get('/change-language/{lang}',[HomeController::class,'changeLanguage'])->name('change-language');
+
+Route::get('/change-theme/{type}',[HomeController::class,'changeTheme'])->name('change-theme');
 
 Route::get('/verify/{code}',[AuthController::class,'verifyAccount'])->name('verify-account');
 
@@ -61,11 +83,13 @@ Route::get('/offer/accept/{order_id}',[ClientController::class,'acceptOffer'])->
 
 Route::get('/offer/decline/{order_id}',[ClientController::class,'declineOffer'])->name('decline-offer');
 
-Route::post('/freelancer/apply',[HomeController::class,'freelancerApply'])->name('freelancer-apply');
+Route::get('/forgot-password',[AuthController::class,'forgotPassword'])->name('forgot-password');
 
-Route::post('/contact-mail',[HomeController::class,'sendContactMail'])->name('contact-mail');
+Route::post('/send-forgot-pass-mail',[AuthController::class,'sendForgotPassMail'])->name('send-forgot-pass-mail');
 
-Route::post('/request-order',[HomeController::class,'requestOrder'])->name('request-order');
+Route::get('/password/reset/{code}',[AuthController::class,'resetPasswordForm'])->name('reset-password-form');
+
+Route::post('/reset-pass/{code}',[AuthController::class,'resetPassword'])->name('reset-password');
 
 //Freelancer
 Route::group(['prefix' => 'freelancer','middleware'=>'freelancer'], function(){
@@ -74,11 +98,15 @@ Route::group(['prefix' => 'freelancer','middleware'=>'freelancer'], function(){
 
 	Route::get('/messages',[FreelancerController::class,'messages'])->name('freelancer-messages');
 
-	Route::get('/orders',[FreelancerController::class,'orders'])->name('freelancer-orders');
+	Route::get('/orders',[FreelancerController::class,'projects'])->name('freelancer-projects');
 
 	Route::get('/settings',[FreelancerController::class,'settings'])->name('freelancer-settings');
 
 	Route::post('/work/upload',[FreelancerController::class,'uploadWork'])->name('freelancer-work-upload');
+
+	Route::post('/work/accept',[FreelancerController::class,'acceptWork'])->name('freelancer-accept-work');
+
+	Route::post('/work/decline',[FreelancerController::class,'declineWork'])->name('freelancer-decline-work');
 
 });
 
@@ -101,7 +129,7 @@ Route::group(['prefix'=>'qa','middleware'=>'qa'],function(){
 
 	Route::post('/approve-work',[QAController::class,'approveWork'])->name('approve-work');
 
-	Route::post('/not-approve-work',[QAController::class,'notApproverWork'])->name('not-approve-work');
+	Route::post('/not-approve-work',[QAController::class,'notApproveWork'])->name('not-approve-work');
 
 });
 
@@ -109,6 +137,10 @@ Route::post('/change-details',[HomeController::class,'changeDetails'])->name('ch
 
 // Authentication
 Route::post('/login',[AuthController::class,'login'])->name('login');
+
+Route::post('/check-ip',[AuthController::class,'checkIp'])->name('check-ip');
+
+Route::post('/check-pin',[AuthController::class,'checkPin'])->name('check-pin');
 
 Route::post('/register',[AuthController::class,'register'])->name('register');
 
@@ -121,9 +153,17 @@ Route::group(['prefix' => 'admin','middleware'=>'admin'], function(){
 
 	Route::get('/',[AdminController::class,'admin'])->name('admin');
 
-	Route::get('/news/add',[AdminController::class,'addNews'])->name('add-news');
+	Route::get('/news/add',[NewsController::class,'addNews'])->name('add-news');
 
-	Route::post('/news/create',[AdminController::class,'createNews'])->name('create-news');
+	Route::get('/news/edit',[NewsController::class,'editNews'])->name('edit-news');
+
+	Route::get('/news/edit/{news_id}',[NewsController::class,'editSingleNews'])->name('edit-single-news');
+
+	Route::post('/news/create',[NewsController::class,'createNews'])->name('create-news');
+
+	Route::post('/news/edit/{news_id}',[NewsController::class,'editSingleNewsPost'])->name('edit-single-news-post');
+
+	Route::post('/news/delete/{news_id}',[NewsController::class,'deleteSingleNews'])->name('delete-single-news-post');
 
 	Route::get('/freelancers',[AdminController::class,'freelancerList'])->name('freelancer-list');
 
@@ -131,11 +171,23 @@ Route::group(['prefix' => 'admin','middleware'=>'admin'], function(){
 
 	Route::post('/freelancer/decline/{freelancer_id}',[AdminController::class,'declineFreelancer'])->name('decline-freelancer');
 
+	Route::get('/users/ban',[AdminController::class,'banUser'])->name('users-list');
+
+	Route::post('/user/ban/{flag}',[AdminController::class,'banUserPost'])->name('ban-user');
+
 	Route::get('/orders/requested',[AdminController::class,'orders'])->name('admin-orders');
 
 	Route::post('/offer/send/{order_id}',[AdminController::class,'sendOffer'])->name('send-offer');
 
 	Route::get('/orders/pending-payments',[AdminController::class,'pendingPayments'])->name('pending-payments');
+
+	Route::get('/orders/appoint-freelancer',[AdminController::class,'appointFreelancer'])->name('appoint-freelancer');
+
+	Route::post('/orders/appoint-freelancer',[AdminController::class,'appointFreelancerPost'])->name('appoint-freelancer-post');
+
+	Route::get('/orders/appoint-qa',[AdminController::class,'appointQA'])->name('appoint-qa');
+
+	Route::post('/orders/appoint-qa',[AdminController::class,'appointQAPost'])->name('appoint-qa-post');
 
 	Route::post('/orders/mark-as-paid/{invoice_id}',[AdminController::class,'markAsPaid'])->name('mark-as-paid');
 
@@ -169,6 +221,7 @@ Route::group(['prefix' => 'admin','middleware'=>'admin'], function(){
 	Route::get('/edit/{type}/{discipline_id}',[AdminController::class,'editDisciplines'])->name('edit-single-resource');
 
 	Route::post('/disciplines/edit/{discipline_id}',[AdminController::class,'editDiscipline'])->name('edit-disciplines');
+
 	Route::post('/discipline/delete/{discipline_id}',[AdminController::class,'deleteDiscipline'])->name('delete-discipline');
 
 	Route::get('/disciplines/add/{type}',[AdminController::class,'addDiscipline'])->name('add-resource');
@@ -183,8 +236,15 @@ Route::group(['prefix' => 'admin','middleware'=>'admin'], function(){
 
 });
 
+Route::get('/404',function(){
+	return view('errors.404');
+});
 
+Route::any('{url}', function(){
+    return redirect('/404');
+})->where('url', '.*');
 
-Route::get('/test-invoice',[ClientController::class,'generatePDF']);
-
-Route::get('/test',[SandboxController::class,'test']);
+/*Route::get('/down', function() {
+   $exitCode = Artisan::call('down');
+   return redirect()->route('welcome');
+});*/

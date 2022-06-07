@@ -37,7 +37,7 @@
 					<h5 class="title">{{Session::get('locale')=='de' ?  $n->title_de : $n->title_en}}</h5>
 					<p class="description">{{$n->formatted_description()}}</p>
 					<div class="text-center">
-						<a href="{{route('single-blog',$n->slug_en)}}" class="learn-more">Learn More <i class="fa-solid fa-caret-right"></i> </a>
+						<a href="{{route('single-blog',$n->slug)}}" class="learn-more">Learn More <i class="fa-solid fa-caret-right"></i> </a>
 					</div>				
 				</div>			
 			</div>

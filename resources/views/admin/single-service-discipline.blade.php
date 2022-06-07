@@ -30,11 +30,19 @@
 			</div>
 			<div class="col-md-6">
 				<label class="font-weight-bold my-1">Description (En)</label>
-				<textarea type="text" name="description" class="ckeditor">{{$resource->description}}</textarea>
+				<textarea name="description" class="ckeditor">{{$resource->description}}</textarea>
 			</div>
 			<div class="col-md-6">
 				<label class="font-weight-bold my-1">Description (De)</label>
-				<textarea type="text" name="description_de" class="ckeditor">{{$resource->description_de}}</textarea>
+				<textarea name="description_de" class="ckeditor">{{$resource->description_de}}</textarea>
+			</div>
+			<div class="col-md-6">
+				<label class="font-weight-bold my-1">Slug (En)</label>
+				<input type="text" name="slug" class="form-control" value="{{$resource->slug}}">
+			</div>
+			<div class="col-md-6">
+				<label class="font-weight-bold my-1">Slug (De)</label>
+				<input type="text" name="slug_de" class="form-control" value="{{$resource->slug_de}}">
 			</div>
 			<div class="col-md-12 text-center">
 				<hr>
@@ -43,6 +51,7 @@
 			</div>
 		</div>
 	</form>
+	<hr>
 	<div class="w-100 text-right">
 		<form action="{{route('delete-discipline',$resource->id)}}" method="POST" class="text-right">
 			{{csrf_field()}}

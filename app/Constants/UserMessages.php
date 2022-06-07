@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Constants;
+use Session;
+
+#always functions because of dynamic text
 
 class UserMessages{
 
@@ -19,5 +22,29 @@ class UserMessages{
 
 	public function orderDeclined($order_name,$order_id){
 		return $order_name.' decline our offer for order number '.$order_id.'. Order and details are deleted from the system';
+	}
+
+	//freelancer
+	public function you_accepted_offer (){
+		return 'You accepted the offer successfully.You can check details in "My Projects section"';
+	}
+
+	public function you_declined_offer(){
+		 return 'You declined the offer successfully';
+	}
+	public function qa_approve_work(){
+		return  'Proccess completed';
+	}
+
+	public function qa_not_approve_work(){
+		return 'Proccess completed';
+	}
+
+	public function passwordRequirements(){
+		 $requirements = Session::get('locale')=='de' 
+		 	? 'Passwortanforderungen: mindestens 10 Zeichen (1 Grossbuchstabe, 1 Ziffer, 1 Sonderzeichen)' 
+		 	: 'Password requirements: at least 10 characters (1 capital letter, 1 digit, 1 symbol)';
+
+		 return $requirements;
 	}
 }

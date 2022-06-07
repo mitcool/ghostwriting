@@ -6,7 +6,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<style type="text/css" rel="stylesheet" media="all">
-		/* Media Queries */
+		
 		@media only screen and (max-width: 500px) {
 			.button {
 				width: 100% !important;
@@ -57,7 +57,9 @@ $style = [
 	'button--green' => 'background-color: #22BC66;',
 	'button--red' => 'background-color: #dc4d2f;',
 	'button--blue' => 'background-color: #3869D4;',
-	'pin-span' => 'font-weight:bold;font-size:22px;'
+	'pin-span' => 'font-weight:bold;font-size:22px;',
+	'paragraph-blue' => 'color:#1A9EFC;margin-top: 0; font-size: 16px; line-height: 1.5em; text-align:justify;padding:0px 35px 0px 35px;',
+
 ];
 $fontFamily = 'font-family: Arial, \'Helvetica Neue\', Helvetica, sans-serif;';
 $fontFamily1 = "font-family:'Montserrat', sans-serif;";
@@ -71,7 +73,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 					<tr>
 						<td style="{{ $style['email-masthead'] }}">
 							<a style="{{ $fontFamily }} {{ $style['email-masthead_name'] }}" href="{{ url('/') }}" target="_blank">
-								<img style="height:50px;" width="200" src="{{asset('images/thumbnail.png')}}" alt="" />
+								<img style="height:50px;" src="{{asset('images/thumbnail.png')}}" alt="" />
 							</a>
 						</td>
 					</tr>
@@ -80,7 +82,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 							<table style="{{ $style['email-body_inner'] }}" align="center" width="570" cellpadding="0" cellspacing="0">       
 								<tr>
 									<td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
-										<img style="width:100%;" width="600" src="{{asset('images/Someone_order.jpg')}}" alt="" />
+										<img style="width:100%;" width="600" src="{{asset('assets/email-pictures/Admin/Freelancer_candidate_check_CV.jpg')}}" alt="" />
 										<table align="center" width="550" cellpadding="10" cellspacing="10">
 											<tr>
 												<td>
@@ -94,7 +96,11 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 														Email: {{$data['email']}}
 														<br/>
 													</p>
+
 													<p style="{{ $style['paragraph-black'] }}">
+														Please check your dashboard section "FREELANCERS" for approve/decline this application
+													</p>
+													<p style="{{ $style['paragraph-blue'] }}">
 														This email message is being sent to you automatically in connection with the processing of a project because you registered at the GHOSTWRITING.COM portal as a client, freelancer, or administrator as well as accepted the relevant terms and conditions in the course of the registration process. Please do not reply to this email. Log in to your account to carry out the appropriate actions and to use the appropriate communication options available.
 													</p>
 													<br/>

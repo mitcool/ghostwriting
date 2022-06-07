@@ -1,10 +1,68 @@
 @extends('admin.home')
 
+@section('css')
+
+<style type="text/css">
+	tr,td,th{
+		vertical-align: middle !important;
+	}
+</style>
+@endsection
 
 @section('content')
 
-<div class="container" >
-	@forelse ($orders as $order)
+<div class="container shadow p-3 text-center my-2">
+	<h2>Not paid milestones</h2>
+	@if(count($invoices))<span class="text-primary">* After you mark milestone as paid please go to Appoint Freelancer section to appoint one</span>@endif
+	<hr>
+
+	<table class="table table-striped">
+		
+			
+	@forelse($invoices as $invoice)
+		<tr>
+			<td>{{$invoice->invoice_number}}</td>
+			<td>{{$invoice->order->name}}</td>
+			<td>{{$invoice->order->email}}</td>
+			<td>{{$invoice->created_at->format('d-m-Y')}}</td>
+			<td>
+				<form action="{{route('mark-as-paid',$invoice->id)}}" method="POST">
+					{{csrf_field()}}
+					<button class="red-button">Mark as paid</button>	
+				</form>
+				
+			</td>
+			<td>
+				<i class="fa-solid fa-eye" style="cursor: pointer;" data-toggle="modal" data-target="#detail-modal-{{$invoice->id}}"></i>
+			</td>
+		</tr>
+		<div class="modal fade" id="detail-modal-{{$invoice->id}}" tabindex="-1">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		       <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		       	<h5>Order Details</h5>
+		       	<hr>
+		       	@foreach($invoice->order->details as $detail)
+		       		<p class="text-left text-capitalize"><span class="font-weight-bold">{{str_replace('_',' ',$detail->key)}} : </span>{{$detail->value}}</p>
+		       	@endforeach
+		      </div>
+		  
+		    </div>
+		  </div>
+		</div>
+	@empty
+
+	<tr>
+		<td>No orders at the moment</td>
+	</tr>
+	@endforelse	
+	</table>
+	{{-- @forelse ($orders as $order)
 	<div class="shadow" style="margin-top:20px;padding:30px;">
 		<h2 class="text-center">Order № {{$order->id}}</h2>
 		<hr>
@@ -46,7 +104,7 @@
 			<div class="col-md-12"> 
 				<h4 class="text-center">Milestones</h4> 
 			</div>	
-			@foreach($order->invoices as $invoice)
+			@foreach($invoices as $invoice)
 				@if($invoice->status == 0)
 					<form action="{{route('mark-as-paid',$invoice->id)}}" method="POST">
 					{{csrf_field()}}
@@ -66,26 +124,7 @@
 						<div class="col-6 py-2">
 							<input type="number" name="freelancer_payment" placeholder="Payment(for freelancer)" class="form-control"  required/>
 						</div>
-						<div class="col-6 py-2">
-							<select class="form-control" name="freelancer" required>
-								<option selected disabled value="">Select Freelancer</option>
-								@foreach($freelancers as $freelancer)
-									<option value="{{$freelancer->id}}">{{$freelancer->name.' '.$freelancer->surname}}</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="col-6 py-2">
-							<select class="form-control" name="qa_id" required>
-								<option selected disabled value="">Select QA</option>
-								@foreach($qas as $qa)
-									<option value="{{$qa->id}}">{{$qa->name.' '.$qa->surname}}</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="col-6"></div>
-						<div class="col text-center py-2">
-							<button class="red-button">Mark as paid</button>	
-						</div>
+			
 					</div>
 					<hr/>
 					</form>
@@ -101,7 +140,7 @@
 			<hr>	
 			<img src="{{asset('images/admin/sad.png')}}" class="w-50">
 		</div>
-	@endforelse
+	@endforelse --}}
 </div>
 
 

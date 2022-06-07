@@ -11,13 +11,16 @@ class OrderCompletedFreelancer extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct()
+    public $invoice;
+    public function __construct($invoice)
     {
-        //
+        $this->invoice = $invoice;
     }
 
     public function build()
     {
-          return $this->view('emails.order-completed-freelancer');
+        return $this->view('emails.order-completed-freelancer')
+        	->with('invoice', $this->invoice)
+            ->attach(storage_path('app\public\freelancer').'\\'.$this->invoice->invoice_number.'.pdf');
     }
 }

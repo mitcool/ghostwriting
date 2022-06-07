@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App;
 use Session;
@@ -30,6 +31,9 @@ use App\Models\CalculatorPrice;
 use App\Models\Country;
 use App\Models\Discipline;
 use App\Models\Tutorial;
+use App\Models\AboutPage;
+use App\Models\CompanyDetail;
+
 //constants
 use App\Constants\UserRoles;
 use App\Constants\UserMessages;
@@ -39,6 +43,7 @@ use App\Mail\RequestPlaced;
 use App\Mail\FreelancerApplication;
 use App\Mail\ContactEmail;
 use App\Mail\PaymentEmail;
+use App\Mail\RequestSuccessfull;
 
 //requests
 use App\Http\Requests\ContactMailRequest;
@@ -59,6 +64,7 @@ class HomeController extends Controller
     }
 
     public function getHome(){
+       
         return view('pages.welcome');
     } 
 
@@ -71,7 +77,9 @@ class HomeController extends Controller
     }
 
     public function getService($service_slug){
-        $service = Service::where('slug',$service_slug)->first();
+        $service = Service::where('slug',$service_slug)
+                        ->orWhere('slug_de',$service_slug)
+                        ->first();
         $services = Service::all();
         return view('pages.service')
             ->with('services',$services)
@@ -87,7 +95,9 @@ class HomeController extends Controller
     }
 
     public function getDiscipline($discipline_slug){
-        $discipline = Discipline::where('slug',$discipline_slug)->first();
+        $discipline = Discipline::where('slug',$discipline_slug)
+                        ->orWhere('slug_de',$discipline_slug)
+                        ->first();
         $disciplines = Discipline::all();
         return view('pages.discipline')
             ->with('disciplines',$disciplines)
@@ -109,34 +119,32 @@ class HomeController extends Controller
     }
 
     public function getAbout(){
+        $about_pages = AboutPage::get();
         $texts = $this->getTexts('about');
         return view('pages.about')
+            ->with('about_pages',$about_pages)
             ->with('texts',$texts);
     }
 
+    public function getSingleAbout($slug){
+        $about_pages = AboutPage::all();
+        $about_page = AboutPage::where('slug',$slug)
+                ->orWhere('slug_de',$slug)
+                ->first();
+        if($slug == 'faq'){
+            return $this->getFaq();
+        }
+        return view('pages.single-about')
+                ->with('about_pages',$about_pages) 
+                ->with('about_page',$about_page);
+    }
+
     public function getPrices(){
-        $prices = CalculatorPrice::get()->groupBy('question');
+        $phone = CompanyDetail::find(1)->contact_phone;
         return view('pages.prices')
-                 ->with('prices',$prices);
+                ->with('phone',$phone);
     }
 
-    public function getAgb(){
-        $texts = $this->getTexts('agb');
-        return view('pages.agb')
-                 ->with('texts',$texts);
-    }
-
-    public function getDataProtection(){
-        $texts = $this->getTexts('data-protection');
-        return view('pages.data-protection')
-                 ->with('texts',$texts);
-    }
-
-    public function getImprint(){
-        $texts = $this->getTexts('imprint');
-        return view('pages.imprint')
-                ->with('texts', $texts);
-    }
 
     public function getBlog(){
         $news = News::orderBy('created_at','desc')->paginate(8);
@@ -145,7 +153,7 @@ class HomeController extends Controller
     }
 
     public function getSingleBlog($slug){
-        $news = News::where('slug_en',$slug)->orWhere('slug_de',$slug)->first();
+        $news = News::where('slug',$slug)->orWhere('slug_de',$slug)->first();
         $other_news = News::where('id','!=',$news->id)->take(3)->get();
         return view('pages.single-blog')
             ->with('other_news',$other_news)
@@ -153,16 +161,14 @@ class HomeController extends Controller
     }
 
     public function getOrder (){
-        $languages = Language::all();
         $phone_codes = Country::select('country_name_en','country_name_de','phone_code')->get();
         return view('pages.order')
-            ->with('phone_codes',$phone_codes)
-            ->with('languages',$languages);
+            ->with('phone_codes',$phone_codes);
     }
 
     public function sendContactMail(ContactMailRequest $request){
         $validatedData = $request->validated();
-        $admins = User::where('role',UserRoles::$adminRole);
+        $admins = User::where('role',UserRoles::$adminRole)->get();
         foreach ($admins as $admin) {
             try {
                 Mail::to($admin->email)->send(new ContactEmail($validatedData));
@@ -170,6 +176,7 @@ class HomeController extends Controller
                 info($e->getMessage());
             }
         }
+        
         return redirect()->back()->with('success',UserMessages::$mail_sent);
     }
 
@@ -197,6 +204,13 @@ class HomeController extends Controller
             $detail->save();
         }
         $order_with_details = Order::with('details')->where('id',$order_id)->first();
+
+        try {
+            Mail::to($order->email)->send(new RequestSuccessfull($order_with_details));
+        } catch (\Exception $e) {
+            info($e->getMessage());
+        }
+
         $admin_message = 'We have a new request from '.$order->email.' . Please check Requested Orders section';
         $this->notifyAdmins($admin_message);
 
@@ -214,7 +228,9 @@ class HomeController extends Controller
         $jobs = Job::all();
         $subjects = Subject::all();
         $languages = Language::all();
+        $password_requirements = UserMessages::passwordRequirements();
         return view('pages.freelancer-application')
+            ->with('password_requirements', $password_requirements)
             ->with('jobs',$jobs)
             ->with('subjects',$subjects)
             ->with('languages',$languages);
@@ -230,6 +246,7 @@ class HomeController extends Controller
         // create user in Users Table
         $user_data = $request->only('name','surname','email','role','password');
         $user_data["role"] = UserRoles::$notVerifiedFreelancer;
+        $user_data['ip'] = $request->ip();
         $user = $this->createUser($user_data);
 
         //upload user

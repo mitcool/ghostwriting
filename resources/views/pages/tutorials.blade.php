@@ -15,6 +15,10 @@
 			margin:40px 0;
 			text-transform: uppercase;
 		}
+		.title_hr{
+			border: 1px solid #139BFD;
+			opacity: 1;
+		}
 	</style>
 @endsection
 
@@ -23,6 +27,7 @@
 <img src="{{asset('images/tutorials.png')}}" class="w-100">
 <div class="container">
 	<h3 class="title">{{$texts[0]->text}}</h3>
+	<hr class="title_hr">
 	<div>{!! $texts[1]->text !!}</div>
 	<div class="row">
 		@foreach($tutorials as $tutorial)
@@ -34,7 +39,6 @@
 				</div>
 				
 			</div>
-
 			<div class="modal fade" id="tutorial_{{$tutorial->id}}" tabindex="-1">
 				<div class="modal-dialog modal-dialog-centered modal-lg bg-transparent border-0">
 					<div class="modal-content bg-transparent border-0">

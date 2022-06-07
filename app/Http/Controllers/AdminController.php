@@ -9,7 +9,6 @@ use Mail;
 use Auth;
 
 use App\Models\User;
-use App\Models\News;
 use App\Models\FreelancerSubject;
 use App\Models\Freelancer;
 use App\Models\FreelancerLanguage;
@@ -34,6 +33,8 @@ use App\Mail\OfferMail;
 use App\Mail\FreelancerApprove;
 use App\Mail\FreelancerTaskEmail;
 use App\Mail\PaymentReceived;
+use App\Mail\QATaskMail;
+
 
 class AdminController extends Controller
 {
@@ -41,35 +42,6 @@ class AdminController extends Controller
         $notifications = Notification::where('user_id',Auth::id())->orderBy('created_at','desc')->get();
     	return view('admin.welcome')
             ->with('notifications',$notifications);
-    }
-
-    public function addNews(){
-    	return view('admin.news');
-    }
-
-    public function createNews(Request $request){
-
-        // TODO: validation request
-    	$input = $request->all();
-    	if($request->hasFile('picture')){
-    		$picture = $request->file('picture');
-    		$fileName = time().'_'.$picture->getClientOriginalName().'.'.$picture->getClientOriginalExtension();
-            $filePath = $request->file('picture')->move('news',$fileName);
-	    	News::insert([
-	    		'title_en' => $input['title_en'], 
-	    		'title_de' => $input['title_de'],
-	    		'description_en' => $input['description_en'],
-	    		'description_de' => $input['description_de'],
-	    		'content_en' => $input['content_en'],
-	    		'content_de' => $input['content_de'],
-	    		'slug_en' => Str::slug($input['title_en']),
-	    		'slug_de' => Str::slug($input['title_de']),
-	    		'picture' => $fileName,
-	    	]);
-    	}
-    	
-
-    	return redirect()->back()->with('success','News created successfully');
     }
 
     public function freelancerList(){
@@ -86,7 +58,7 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             
         }
-        return redirect()->back();
+        return redirect()->back()->with('success','Freelancer has been approved successfully');
     }
 
     public function declineFreelancer($freelancer_id){
@@ -110,11 +82,16 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Freelancer deleted from the system');
     }
 
+    public function banUser(){
+        $users = User::where('role',UserRoles::$clientRole)
+                        ->orWhere('role',UserRoles::$freelancerRole)
+                        ->get();
+        return view('admin.users-list')->with('users', $users);
+    }
+
     public function orders(){
         $orders = Order::with('details')->where('status',OrderStatus::$requested)->get();
-        $orders_for_payment = Order::where('status',OrderStatus::$accepted)->get();
         return view('admin.orders')
-                ->with('orders_for_payment',$orders_for_payment)
                 ->with('orders',$orders);
     }
 
@@ -140,65 +117,71 @@ class AdminController extends Controller
     }
 
     public function pendingPayments(){
-        $freelancers = User::where('role',UserRoles::$freelancerRole)->get();
-        $qas =  User::where('role',UserRoles::$qaRole)->get();
-        $orders = Order::with('details')
-                        ->with('invoices')
-                        ->where('status',OrderStatus::$accepted)
+        $invoices = Invoice::with('order')
+                        ->where('status',InvoiceStatus::$pending)
                         ->orderBy('created_at','desc')
                         ->get();
         return view('admin.pending-payments')
-                ->with('qas',$qas)
-                ->with('freelancers',$freelancers)
-                ->with('orders',$orders);
+                ->with('invoices',$invoices);
     }
 
     public function markAsPaid(Request $request, $invoice_id){
         $invoice = Invoice::find($invoice_id);
-
         Invoice::where('id',$invoice_id)->update([
             'status' => InvoiceStatus::$paid,
-            'user_id'=>$request->freelancer,
-            'freelancer_payment' => $request->freelancer_payment,
-            'qa_id' => $request->qa_id
         ]);
 
-        $related_order = Order::find($invoice->order->id);
+        try {
+            Mail::to($invoice->order->email)->send(new PaymentReceived($invoice));
+        } catch (Exception $e) {
+           info($e->getMessage()); 
+        }
+        return redirect()->back()->with('success','Milestone marked as paid successfully. Please appoint a freelancer for this milestone');
+    }
 
-        $this->checkIfAllMilestonesArePaid($related_order->id);
+    public function appointFreelancer(){
+        $invoices = Invoice::where('status',InvoiceStatus::$paid)->get();
+        $freelancers = User::where('role',UserRoles::$freelancerRole)->get();
 
-        $freelancer_mail = User::find($request->freelancer)->email;
+        return  view('admin.appoint-freelancer')
+                ->with('freelancers',$freelancers)
+                ->with('invoices',$invoices);
+    }
 
+    public function appointFreelancerPost(Request $request){
+        $input = $request->only('invoice_id','freelancer_payment','freelancer_id');
+
+        Invoice::where('id',$input['invoice_id'])->update([
+            "freelancer_payment" => $input['freelancer_payment'],
+            "user_id" => $input['freelancer_id'],
+            "status" => InvoiceStatus::$offered_to_freelancer
+        ]);
+
+        $invoice = Invoice::find($input['invoice_id']);
+        $freelancer_mail = User::find($request->freelancer_id)->email;
+
+        // Notifications
         try {
           Mail::to($freelancer_mail)->send(new FreelancerTaskEmail($invoice));
         } catch (\Exception $e) {
             info($e->getMessage());
         }
 
-        try {
-          Mail::to($invoice->order->email)->send(new PaymentReceived($invoice));
-        } catch (\Exception $e) {
-            info($e->getMessage());
-        }
-    
-        return redirect()->back()->with('success','Milestone marked as paid successfully');
+        return redirect()->back()->with('success','Freelancer for this milestone appointed successfully.');
     }
 
-    private function checkIfAllMilestonesArePaid($related_order_id){
-        $order = Order::find($related_order_id);
-        $is_order_paid = 1;
-        foreach($order->invoices as $invoice){
-            if($invoice->status == InvoiceStatus::$pending){
-                $is_order_paid = 0;
-            }
-        }
-        if($is_order_paid == 1){
-            Order::where('id',$order->id)->update(['status'=>OrderStatus::$paid]);
-        }
+    public function banUserPost(Request $request,$flag){
+       $user_id = $request->user_id;
+       User::where('id',$user_id)->update([
+            'is_banned' => $flag
+       ]);
+       return redirect()->back()->with('success','User status changed successfully');
     }
 
     public function inProgressOrders(){
-        $invoices = Invoice::where('status',InvoiceStatus::$paid)->get();
+        $invoices = Invoice::where('status',InvoiceStatus::$appointed_qa)
+            ->orWhere('status',InvoiceStatus::$completed_by_freelancer)
+            ->get();
         return view('admin.in-progress-orders')
                 ->with('invoices',$invoices);
     }
@@ -351,7 +334,8 @@ class AdminController extends Controller
                 'name_de' => $request->name_de,
                 'description' => $request->description,
                 'description_de' => $request->description_de,
-                'slug' => Str::slug($request->name)
+                'slug' => $request->slug,
+                'slug_de' => $request->slug_de,   
             ]);
         }
         else{
@@ -360,7 +344,8 @@ class AdminController extends Controller
                 'name_de' => $request->name_de,
                 'description' => $request->description,
                 'description_de' => $request->description_de,
-                'slug' => Str::slug($request->name)
+                'slug' => $request->slug,
+                'slug_de' => $request->slug_de,
             ]);
         }
 
@@ -434,4 +419,34 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success','Tutorial updated successfully');
     }
+
+    public function appointQA(){
+        $invoices = Invoice::where('status',InvoiceStatus::$accepted_by_freelancer)->get();
+        $qas = User::where('role',UserRoles::$qaRole)->get();
+        return view('admin.appoint-qa')
+                ->with('qas',$qas)
+                ->with('invoices',$invoices);
+    }
+
+    public function appointQAPost(Request $request){
+        $input = $request->only('qa_id','invoice_id');
+        $invoice = Invoice::find($input['invoice_id']);
+        $qa_mail = User::find($input['qa_id'])->email;
+
+        Invoice::where('id',$input['invoice_id'])->update([
+            'status' => InvoiceStatus::$appointed_qa,
+            'qa_id' =>  $input['qa_id']
+        ]);
+
+        try {
+          Mail::to($qa_mail)->send(new QATaskMail);
+        } catch (\Exception $e) {
+            info($e->getMessage());
+        }
+
+        // notifications
+        return redirect()->back()->with('success','QA appointed successfully for the order');
+
+    }
+
 }

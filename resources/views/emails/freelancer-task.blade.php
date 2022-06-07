@@ -93,7 +93,7 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 														Dear {{$invoice->freelancer->name}}
 													</h1>
 													<p style="{{ $style['paragraph-black'] }}">
-														We have a task for you with following details:
+														We have an offer for you with following details:
 														<br/>
 													</p>
 													<p style="{{ $style['paragraph-black'] }}">
@@ -105,7 +105,6 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 													<p style="{{ $style['paragraph-black'] }}"><span style="{{$style['capital_letter']}}">{{ str_replace('_',' ',$detail->key)}}</span> : {{$detail->value }}</p>
 													@endforeach
 													
-												
 													<p style="{{ $style['paragraph-blue'] }}">
 														This email message is being sent to you automatically in connection with the processing of a project because you registered at the GHOSTWRITING.COM portal as a client, freelancer, or administrator as well as accepted the relevant terms and conditions in the course of the registration process. Please do not reply to this email. Log in to your account to carry out the appropriate actions and to use the appropriate communication options available.
 													</p>

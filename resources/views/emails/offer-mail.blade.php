@@ -102,8 +102,8 @@ $fontFamily1 = "font-family:'Montserrat', sans-serif;";
 													@endforeach --}}
 													
 													<div style="{{ $style['paragraph-black'].$style['text-center'] }}">
-														<a href="{{route('accept-offer',$order->id)}}"  style="{{$style['link-blue']}}">Accept</a>
-														<a href="{{route('decline-offer',$order->id)}}" style="{{$style['link-red']}}">Decline</a>
+														<a href="{{route('accept-offer',$order->id)}}"  style="{{$style['link-blue']}}">Accept Offer</a>
+														<a href="{{route('decline-offer',$order->id)}}" style="{{$style['link-red']}}">Decline Offer</a>
 													</div>
 													<hr>
 													<p style="{{ $style['paragraph-blue'] }}">

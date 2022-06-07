@@ -7,11 +7,13 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 use App\Constants\UserRoles;
 
 use Hash;
 use Session;
+use Auth;
 
 use App\Models\Notification;
 use App\Models\User;
@@ -21,6 +23,23 @@ use App\Models\TextEn;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function deleteNotifications(Request $request){
+
+       if($request->all && $request->notification_ids){
+            return redirect()->back()->with('wrong','Please check at least on message');
+       }
+
+       if($request->all==1){
+            Notification::where('user_id',Auth::id())->delete();
+       }
+       else{
+          foreach ($request->notification_ids as $id) {
+            Notification::find($id)->delete();
+          }
+       }
+       return redirect()->back();
+    }
 
     public function uploadFile($request_file,$path){
         $file_with_extension = $request_file->getClientOriginalName();
@@ -63,7 +82,9 @@ class Controller extends BaseController
         'email' => $data['email'],
         'role' => $data['role'],
         'password' => Hash::make($data['password']),
-        'confirmation_code' => Str::random(30)
+        'confirmation_code' => Str::random(30),
+        'ip' => $data['ip'],
+        'pin' => rand(1,999999)
       ]);
     } 
 

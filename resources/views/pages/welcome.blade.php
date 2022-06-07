@@ -7,7 +7,7 @@
 	.select-type{
 		background:#2C2C2C;
 		color:white;
-		border:10px solid #2C2C2C;
+		border:5px solid #2C2C2C;
 		text-decoration: none;
 		cursor: pointer;
 		padding:5px;

@@ -21,6 +21,6 @@ class PaymentReceived extends Mailable
     {
         return $this->view('emails.payment-received')
                 ->with(['invoice'=>$this->invoice])
-                ->attach(storage_path('app\public').'\\'.$this->invoice->id.'.pdf');
+                ->attach(storage_path('app\public').'\\'.$this->invoice->invoice_number.'.pdf');
     }
 }

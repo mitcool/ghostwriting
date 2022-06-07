@@ -1,5 +1,5 @@
 body{
-	font-family: 'Roboto', sans-serif !important;
+	font-family: 'Comfortaa', cursive !important;
 }
 .header-link{
 	text-transform: uppercase;
@@ -24,6 +24,7 @@ body{
 #header-logo{
 	font-size: 2rem !important;
 	margin-left:30px;
+	letter-spacing: 1px;
 	font-weight: 600;
 }
 

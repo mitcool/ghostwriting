@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 class ContactEmail extends Mailable
 {
     use Queueable, SerializesModels;
+    
     public $data;
     public function __construct($data)
     {

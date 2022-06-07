@@ -8,12 +8,14 @@ class OrderStatus{
 
 	public static $offer = 1;
 
-	public static $accepted = 2;
+	public static $accepted_by_client = 2;
 
 	public static $paid = 3;
 
-	public static $qa_check = 4;
+	public static $accepted_by_freelancer = 4;
 
-	public static $sent_to_client = 5;
+	public static $qa_check = 5;
+
+	public static $sent_to_client = 6;
 
 }

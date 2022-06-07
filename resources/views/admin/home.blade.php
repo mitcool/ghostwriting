@@ -10,10 +10,30 @@
 
     <title>Ghostwriting - Dashboard</title>
 
+    <style type="text/css">
+        .red-button{
+            color:white;
+            background: #F84162;
+            border:none;
+            border-radius:5px;
+            padding:8px 20px;
+        }
+
+        .green-button{
+            color:white;
+            background: #00B74A;
+            border:none;
+            border-radius:5px;
+            padding:8px 20px;
+        }
+    </style>
     <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" type="text/css" href="{{asset('css/common.css')}}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+
     @yield('css')
 
 </head>
@@ -23,7 +43,12 @@
     <div id="wrapper">
 
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+             <li class="nav-item active">
+                <a class="nav-link" href="{{route('welcome')}}">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>HomePage</span>
+                </a>
+            </li>
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
@@ -36,13 +61,19 @@
             <hr class="sidebar-divider">
 
             <div class="sidebar-heading">
-                Menu
+                News
             </div>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('add-news')}}">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>News</span>
+                    <span>Add News</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('edit-news')}}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Edit Existing News</span>
                 </a>
             </li>
              <hr class="sidebar-divider">
@@ -53,6 +84,12 @@
                 <a class="nav-link collapsed" href="{{route('freelancer-list')}}">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Freelancer</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('users-list')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Ban/Unban User</span>
                 </a>
             </li>
             <hr class="sidebar-divider">
@@ -70,6 +107,18 @@
                 <a class="nav-link collapsed" href="{{route('pending-payments')}}">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Pending Payments</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('appoint-freelancer')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Appoint Freelancer</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('appoint-qa')}}">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Appoint QA</span>
                 </a>
             </li>
             <li class="nav-item">
